@@ -1,0 +1,5 @@
+# Fichiers sources contenant des chaines à traduire
+
+[encoding: UTF-8]src/replace.c
+[encoding: UTF-8]src/files.c
+[encoding: UTF-8]src/replace.glade
