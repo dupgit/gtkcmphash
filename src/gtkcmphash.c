@@ -3,7 +3,7 @@
    gtkcmphash.c
    Projet gtkcmphash
 
-   (C) Copyright 2007 Olivier Delhomme
+   (C) Copyright 2007 - 2008 Olivier Delhomme
    e-mail : olivierdelhomme@gmail.com
  
    This program is free software; you can redistribute it and/or modify
@@ -280,11 +280,11 @@ static void enregistre_les_hashs(main_struct_t *main_struct)
 
 	if (filename != NULL)
 		{
-			log_message(main_struct->log, G_LOG_LEVEL_INFO, "Fichier à sauvegarder %s", filename);
+			ldt_log_message(main_struct->log, G_LOG_LEVEL_INFO, "Fichier à sauvegarder %s", filename);
       
 			res = save_the_file_hash_list(main_struct->file_hash_list, filename, FALSE, main_struct->opts);
       
-			log_message(main_struct->log, G_LOG_LEVEL_INFO, "%d octets compressés en %d octets dans le fichier %s (%d fichiers hachés)", res->uncompressed, res->compressed, filename, res->nb_hash);
+			ldt_log_message(main_struct->log, G_LOG_LEVEL_INFO, "%d octets compressés en %d octets dans le fichier %s (%d fichiers hachés)", res->uncompressed, res->compressed, filename, res->nb_hash);
       
 
 			g_free(filename);
@@ -292,7 +292,7 @@ static void enregistre_les_hashs(main_struct_t *main_struct)
 		}
 	else
 		{
-			log_message(main_struct->log, G_LOG_LEVEL_WARNING, "Pas de fichier à sauvegarder !!!");
+			ldt_log_message(main_struct->log, G_LOG_LEVEL_WARNING, "Pas de fichier à sauvegarder !!!");
 		}
 }
 
@@ -351,13 +351,13 @@ static void menu_hash_a_dir(GtkWidget *widget, gpointer data)
 
 	if (dirname != NULL)
 		{
-			log_message(main_struct->log, G_LOG_LEVEL_INFO, "Dossier sélectionné %s", dirname);
+			ldt_log_message(main_struct->log, G_LOG_LEVEL_INFO, "Dossier sélectionné %s", dirname);
 			main_struct->file_hash_list = hash_a_directory(main_struct, dirname);
 			g_free(dirname);
 		}
 	else
 		{
-			log_message(main_struct->log, G_LOG_LEVEL_WARNING, "Pas de dossier sélectionné !!!");
+			ldt_log_message(main_struct->log, G_LOG_LEVEL_WARNING, "Pas de dossier sélectionné !!!");
 		}
 
 	make_sensitive_hashs_related(main_struct);
@@ -376,7 +376,7 @@ static void menu_load_hashsets(GtkWidget *widget, gpointer data)
 
 	if (dirname != NULL)
 		{
-			log_message(main_struct->log, G_LOG_LEVEL_INFO, "Dossier sélectionné %s", dirname);
+			ldt_log_message(main_struct->log, G_LOG_LEVEL_INFO, "Dossier sélectionné %s", dirname);
 			load_a_complete_directory(main_struct, dirname);
 
 			/* Gestion du menu de sauvegarde et d'oubli des hashsets */
@@ -386,7 +386,7 @@ static void menu_load_hashsets(GtkWidget *widget, gpointer data)
 		}
 	else
 		{
-			log_message(main_struct->log, G_LOG_LEVEL_WARNING, "Pas de dossier sélectionné !!!");
+			ldt_log_message(main_struct->log, G_LOG_LEVEL_WARNING, "Pas de dossier sélectionné !!!");
 		}
 
 	make_sensitive_comparison_related(main_struct);
@@ -405,18 +405,18 @@ static void menu_save_hashsets(GtkWidget *widget, gpointer data)
 
 	if (filename != NULL)
 		{
-			log_message(main_struct->log, G_LOG_LEVEL_INFO, "Fichier à sauvegarder %s", filename);
+			ldt_log_message(main_struct->log, G_LOG_LEVEL_INFO, "Fichier à sauvegarder %s", filename);
       
 			res = save_the_hashsets(main_struct, filename);
       
-			log_message(main_struct->log, G_LOG_LEVEL_INFO, "%d octets compressés en %d octets dans le fichier %s (%d fichiers hachés)", res->uncompressed, res->compressed, filename, res->nb_hash);
+			ldt_log_message(main_struct->log, G_LOG_LEVEL_INFO, "%d octets compressés en %d octets dans le fichier %s (%d fichiers hachés)", res->uncompressed, res->compressed, filename, res->nb_hash);
       
 			g_free(filename);
 			g_free(res);
 		}
 	else
 		{
-			log_message(main_struct->log, G_LOG_LEVEL_WARNING, "Pas de fichier à sauvegarder !!!");
+			ldt_log_message(main_struct->log, G_LOG_LEVEL_WARNING, "Pas de fichier à sauvegarder !!!");
 		}
 }
 
@@ -436,21 +436,21 @@ static void save_the_comparison_results(main_struct_t *main_struct, gboolean in_
 
 	if (filename != NULL)
 		{
-			log_message(main_struct->log, G_LOG_LEVEL_INFO, "Fichier à sauvegarder %s", filename);
+			ldt_log_message(main_struct->log, G_LOG_LEVEL_INFO, "Fichier à sauvegarder %s", filename);
       
 			if (in_hashsets == TRUE)
 				res = save_the_file_hash_list(main_struct->dedans_ou_pas->found, filename, TRUE, main_struct->opts);
 			else
 				res = save_the_file_hash_list(main_struct->dedans_ou_pas->not_found, filename, FALSE, main_struct->opts);
       
-			log_message(main_struct->log, G_LOG_LEVEL_INFO, "%d octets compressés en %d octets dans le fichier %s (%d hashs)", res->uncompressed, res->compressed, filename, res->nb_hash);
+			ldt_log_message(main_struct->log, G_LOG_LEVEL_INFO, "%d octets compressés en %d octets dans le fichier %s (%d hashs)", res->uncompressed, res->compressed, filename, res->nb_hash);
      
 			g_free(filename);
 			g_free(res);
 		}
 	else
 		{
-			log_message(main_struct->log, G_LOG_LEVEL_WARNING, "Pas de fichier à sauvegarder !!!");
+			ldt_log_message(main_struct->log, G_LOG_LEVEL_WARNING, "Pas de fichier à sauvegarder !!!");
 		}
 }
 
@@ -461,19 +461,19 @@ static void log_comparison_type(main_struct_t *main_struct)
 {
 	if (main_struct->opts->hash_type == GCH_HASH_MD5)
 		{
-			log_message(main_struct->log, G_LOG_LEVEL_INFO, "Hash de comparaison : MD5");
+			ldt_log_message(main_struct->log, G_LOG_LEVEL_INFO, "Hash de comparaison : MD5");
 		}
 	else if (main_struct->opts->hash_type == GCH_HASH_SHA1)
 		{
-			log_message(main_struct->log, G_LOG_LEVEL_INFO, "Hash de comparaison : SHA1");
+			ldt_log_message(main_struct->log, G_LOG_LEVEL_INFO, "Hash de comparaison : SHA1");
 		}
 	else if (main_struct->opts->hash_type == GCH_HASH_RIPEMD160)
 		{
-			log_message(main_struct->log, G_LOG_LEVEL_INFO, "Hash de comparaison : RIPEMD160");
+			ldt_log_message(main_struct->log, G_LOG_LEVEL_INFO, "Hash de comparaison : RIPEMD160");
 		}
 	else
 		{
-			log_message(main_struct->log, G_LOG_LEVEL_WARNING, "Hash de comparaison inconnu");
+			ldt_log_message(main_struct->log, G_LOG_LEVEL_WARNING, "Hash de comparaison inconnu");
 		}
 }
 
@@ -488,10 +488,10 @@ static void menu_not_in_hashsets(GtkWidget *widget, gpointer data)
 		{
 			if (main_struct->dedans_ou_pas->not_found == NULL)
 				{	  
-					log_message(main_struct->log, G_LOG_LEVEL_INFO, "Début de la comparaison. Soyez patient !");
+					ldt_log_message(main_struct->log, G_LOG_LEVEL_INFO, "Début de la comparaison. Soyez patient !");
 					log_comparison_type(main_struct);
 					main_struct->dedans_ou_pas = find_all_hashes_from_hashset(main_struct->file_hash_list, main_struct->tronc, main_struct->opts);
-					log_message(main_struct->log, G_LOG_LEVEL_INFO, "Fin de la comparaison");
+					ldt_log_message(main_struct->log, G_LOG_LEVEL_INFO, "Fin de la comparaison");
 				}
 			save_the_comparison_results(main_struct, FALSE);
 		}
@@ -509,10 +509,10 @@ static void menu_in_hashsets(GtkWidget *widget, gpointer data)
 		{
 			if (main_struct->dedans_ou_pas->found == NULL)
 				{
-					log_message(main_struct->log, G_LOG_LEVEL_INFO, "Début de la comparaison. Soyez patient !");
+					ldt_log_message(main_struct->log, G_LOG_LEVEL_INFO, "Début de la comparaison. Soyez patient !");
 					log_comparison_type(main_struct);
 					main_struct->dedans_ou_pas = find_all_hashes_from_hashset(main_struct->file_hash_list, main_struct->tronc, main_struct->opts);
-					log_message(main_struct->log, G_LOG_LEVEL_INFO, "Fin de la comparaison");
+					ldt_log_message(main_struct->log, G_LOG_LEVEL_INFO, "Fin de la comparaison");
 				}
 			save_the_comparison_results(main_struct, TRUE);
 		}
@@ -533,10 +533,10 @@ static void menu_do_the_comparison(GtkWidget *widget, gpointer data)
 				{
 					free_dedans_ou_pas(main_struct); 
 				}
-			log_message(main_struct->log, G_LOG_LEVEL_INFO, "Début de la comparaison. Soyez patient !");
+			ldt_log_message(main_struct->log, G_LOG_LEVEL_INFO, "Début de la comparaison. Soyez patient !");
 			log_comparison_type(main_struct);
 			main_struct->dedans_ou_pas = find_all_hashes_from_hashset(main_struct->file_hash_list, main_struct->tronc, main_struct->opts);
-			log_message(main_struct->log, G_LOG_LEVEL_INFO, "Fin de la comparaison");
+			ldt_log_message(main_struct->log, G_LOG_LEVEL_INFO, "Fin de la comparaison");
 		}
 }
 
@@ -621,13 +621,13 @@ static void menu_load_a_hashset(GtkWidget *widget, gpointer data)
 			end_progress_window(main_struct);
 
 
-			log_message(main_struct->log, G_LOG_LEVEL_INFO, "Fichier %s chargé (%d hashs intégrés)", filename, compte->nb_hash);
+			ldt_log_message(main_struct->log, G_LOG_LEVEL_INFO, "Fichier %s chargé (%d hashs intégrés)", filename, compte->nb_hash);
 			g_free(filename);
 			g_free(dirname);
 		}
 	else
 		{
-			log_message(main_struct->log, G_LOG_LEVEL_WARNING, "Pas de dossier sélectionné !!!");
+			ldt_log_message(main_struct->log, G_LOG_LEVEL_WARNING, "Pas de dossier sélectionné !!!");
 		}
 
 	make_sensitive_hashs_related(main_struct);
@@ -850,7 +850,7 @@ static void connect_signaux(main_struct_t *main_struct)
  */
 static gboolean load_xml_interface(main_struct_t *main_struct)
 {
-	main_struct->xml = load_glade_xml_file(main_struct->location_list, "gtkcmphash.glade");
+	main_struct->xml = ldt_load_glade_xml_file(main_struct->location_list, "gtkcmphash.glade");
 
 	if (main_struct->xml == NULL)
 		return FALSE;
@@ -896,7 +896,7 @@ static main_struct_t *init_main_struct(void)
 		{
 			main_struct->xml = NULL;    /* le XML de l'interface                           */
 
-			main_struct->location_list = init_location_list(NULL, "GtkCmpHash"); /* la liste de localisations  */
+			main_struct->location_list = ldt_init_location_list(NULL, "GtkCmpHash"); /* la liste de localisations  */
 
 			main_struct->log = NULL;    /* Le système de log                               */
 
@@ -971,7 +971,7 @@ static void init_interface(main_struct_t *main_struct)
 	/* Affichage de tous les widgets qui doivent être affichés */
 	gtk_widget_show_all(glade_xml_get_widget(main_struct->xml, "gtkcmphash_window"));
 
-	log_message(main_struct->log, G_LOG_LEVEL_MESSAGE, "Version %s - Date %s - %s", ProgVersion, ProgDate, ProgAuthor);
+	ldt_log_message(main_struct->log, G_LOG_LEVEL_MESSAGE, "Version %s - Date %s - %s", ProgVersion, ProgDate, ProgAuthor);
 
 }
 
@@ -982,7 +982,7 @@ static void init_openssl(main_struct_t *main_struct)
 {
 
 	OpenSSL_add_all_digests();
-	log_message(main_struct->log, G_LOG_LEVEL_MESSAGE, "OpenSSL Digest messages loaded !");
+	ldt_log_message(main_struct->log, G_LOG_LEVEL_MESSAGE, "OpenSSL Digest messages loaded !");
 }
 
 

@@ -3,7 +3,7 @@
    log_window.c
    Projet GtkCmpHash
 
-   (C) Copyright 2007 Olivier Delhomme
+   (C) Copyright 2007 - 2008 Olivier Delhomme
    e-mail : olivierdelhomme@gmail.com
  
    This program is free software; you can redistribute it and/or modify
@@ -65,7 +65,7 @@ void init_log_window(main_struct_t *main_struct)
   GtkTextView *textview = GTK_TEXT_VIEW(glade_xml_get_widget(main_struct->xml, "lw_textview"));
 
   /* Ajoute le textview au système de log */
-  main_struct->log = init_log_domain(textview, ProgName, PROGRAM_DEBUG);
+  main_struct->log = ldt_init_log_domain(textview, ProgName, PROGRAM_DEBUG);
 
   connect_log_window_signals(main_struct);
 }

@@ -3,7 +3,7 @@
    file_io.c
    Projet GtkCmpHash
 
-   (C) Copyright 2007 Olivier Delhomme
+   (C) Copyright 2007 - 2008 Olivier Delhomme
    e-mail : olivierdelhomme@gmail.com
  
    This program is free software; you can redistribute it and/or modify
@@ -272,7 +272,7 @@ GSList *hash_a_directory(main_struct_t *main_struct, gchar *dirname)
 	/* Ending things with the progress bar window */
 	end_progress_window(main_struct);
  
-	log_message(main_struct->log, G_LOG_LEVEL_INFO, "Répertoire %s haché : %Ld fichier(s) et %Ld hash(s) intégrés", dirname, max, integres);
+	ldt_log_message(main_struct->log, G_LOG_LEVEL_INFO, "Répertoire %s haché : %Ld fichier(s) et %Ld hash(s) intégrés", dirname, max, integres);
 	g_slist_free(head);
 
 	return file_hash_list;
@@ -626,7 +626,7 @@ GSList *load_one_file(main_struct_t *main_struct, gchar* dirname, gchar *filenam
 						{
 							if (bzerror != BZ_SEQUENCE_ERROR)
 								{
-									log_message(main_struct->log, G_LOG_LEVEL_WARNING, "Erreur %d  dans le hashset %s", bzerror, hashset->name); 
+									ldt_log_message(main_struct->log, G_LOG_LEVEL_WARNING, "Erreur %d  dans le hashset %s", bzerror, hashset->name); 
 								} 
 							stop = TRUE;
 						}
@@ -635,7 +635,7 @@ GSList *load_one_file(main_struct_t *main_struct, gchar* dirname, gchar *filenam
 			BZ2_bzReadClose(&bzerror, compressed);
 
 			fclose(fp);
-			log_message(main_struct->log, G_LOG_LEVEL_INFO, "Hashset %s intégré (%d hashs)", hashset->name, compte->nb_hash);
+			ldt_log_message(main_struct->log, G_LOG_LEVEL_INFO, "Hashset %s intégré (%d hashs)", hashset->name, compte->nb_hash);
 
 			/* on ne libère pas hashset car il est intégré dans la structure file_hash_list ! */
 		}
@@ -682,12 +682,12 @@ void load_a_complete_directory(main_struct_t *main_struct, gchar *dirname)
 		main_struct->opts->nb_indirections >= GCH_NB_INDIRECT_MIN && 
 		main_struct->opts->nb_indirections <= GCH_NB_INDIRECT_MAX)
 		{
-			log_message(main_struct->log, G_LOG_LEVEL_INFO, "Création de la structure avec %d niveaux", main_struct->opts->nb_indirections);
+			ldt_log_message(main_struct->log, G_LOG_LEVEL_INFO, "Création de la structure avec %d niveaux", main_struct->opts->nb_indirections);
 			main_struct->tronc = nouveau_tronc(main_struct->opts->nb_indirections); /* n niveaux d'indirection -> 256^(n-1) listes !*/
 		}
 	else if (main_struct->tronc == NULL)
 		{
-			log_message(main_struct->log, G_LOG_LEVEL_INFO, "Création de la structure avec %d niveaux", GCH_NB_INDIRECT);
+			ldt_log_message(main_struct->log, G_LOG_LEVEL_INFO, "Création de la structure avec %d niveaux", GCH_NB_INDIRECT);
 			main_struct->tronc = nouveau_tronc(GCH_NB_INDIRECT); /* valeur par défaut */
 		}
  
@@ -717,7 +717,7 @@ void load_a_complete_directory(main_struct_t *main_struct, gchar *dirname)
 	/* Ending things with the progress bar window */
 	end_progress_window(main_struct);
 
-	log_message(main_struct->log, G_LOG_LEVEL_INFO, "%Ld fichier(s) intégré(s) soit %Ld hashs", max, total);
+	ldt_log_message(main_struct->log, G_LOG_LEVEL_INFO, "%Ld fichier(s) intégré(s) soit %Ld hashs", max, total);
 
 	/* Libération de mémoire */
 	g_slist_free(head); /* Ici ça peut prendre du temps */

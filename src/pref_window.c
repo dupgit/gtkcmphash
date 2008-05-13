@@ -3,7 +3,7 @@
    pref_window.c
    Projet GtkCmpHash
 
-   (C) Copyright 2007 Olivier Delhomme
+   (C) Copyright 2007 - 2008 Olivier Delhomme
    e-mail : olivierdelhomme@gmail.com
  
    This program is free software; you can redistribute it and/or modify
@@ -172,7 +172,7 @@ static void rb_hash_toggled(GtkWidget *widget, gpointer data)
 	GtkWidget *activated = NULL;
 	const gchar *widget_name = NULL;
 
-	activated = gtk_radio_button_get_active_from_widget(rb);
+	activated = ldt_gtk_radio_button_get_active_from_widget(rb);
 	widget_name = gtk_widget_get_name(activated);
   
 	if (g_ascii_strcasecmp(widget_name, "rb_sha1") == 0)

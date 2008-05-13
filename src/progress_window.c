@@ -3,7 +3,7 @@
    progress_window.c
    Projet GtkCmpHash
 
-   (C) Copyright 2007 Olivier Delhomme
+   (C) Copyright 2007 - 2008 Olivier Delhomme
    e-mail : olivierdelhomme@gmail.com
  
    This program is free software; you can redistribute it and/or modify

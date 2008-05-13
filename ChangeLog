@@ -1,0 +1,5 @@
+13.05.2008  Olivier Delhomme <olivierdelhomme@gmail.com>
+	    * Modified all calls to functions to libduptools
+	      Also changed the required version from 0.0.3 to 0.0.4
+	    * get rid of specific autotool's version calls
+	    * Changed all header's comments to add year 2008
