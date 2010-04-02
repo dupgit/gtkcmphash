@@ -1,94 +1,96 @@
 La TODO List :
 
-    * Ajouter la possibilité d'obtenir les hashs d'un fichier par morceaux 
+    * Ajouter la possibilité d'obtenir les hashs d'un fichier par morceaux
       de 512 octets
     * Améliorer la barre de progression :
-          o pour qu'elle soit visible à chaque étape (chargement - calcul 
+          o pour qu'elle soit visible à chaque étape (chargement - calcul
             - sauvegarde)
           o Modifier le comportement pour le chargement afin de prendre en
-            compte également l'insertion dans la structure (ça peut être 
-            très long quand le fichier de hash est grand) 
+            compte également l'insertion dans la structure (ça peut être
+            très long quand le fichier de hash est grand)
     * Gestion des erreurs lors de la sauvegarde et de la lecture des fichiers
       compressés. [En cours]
     * Ajouter une option pour
-          o ne pas utiliser la barre de progression (pour aller plus vite) 
-    * Réaliser des essais avec des noms de fichiers à la con (c'est à dire 
+          o ne pas utiliser la barre de progression (pour aller plus vite)
+    * Réaliser des essais avec des noms de fichiers à la con (c'est à dire
       contenant des caractères de contrôle ou inhabituels)
-    * Ajouter un module de statistiques sur l'occupation mémoire de la 
-      structure 
+    * Ajouter un module de statistiques sur l'occupation mémoire de la
+      structure
+    * Translate from frecnh to english the whole project (comments, functions,
+      files and so on...)
 
 La Done List :
 
     * 24.07.2007 - Sauvegarde des hashs de répertoires entiers -> sauvegarde
                    compressée (bzip2)
     * 26.07.2007
-          o Utilisation d'une base de donnée plate éventuellement compressée 
+          o Utilisation d'une base de donnée plate éventuellement compressée
             gzip ou bzip2 -> bzip2 uniquement
-          o Comparaison avec la base plate (choix de la base plate) -> choix 
+          o Comparaison avec la base plate (choix de la base plate) -> choix
             par un menu
-          o Inversion des résultats (par défaut on a les fichiers identiques 
-            on peut demander à avoir uniquement ceux qui diffèrent) -> choix 
+          o Inversion des résultats (par défaut on a les fichiers identiques
+            on peut demander à avoir uniquement ceux qui diffèrent) -> choix
             du résultat que l'on souhaite sauvegarder (on peut faire les deux)
     * 27.07.2007
-          o Il ne faut plus que l'appel à load_one_file contienne main_struct 
+          o Il ne faut plus que l'appel à load_one_file contienne main_struct
             pour le rendre plus généralisable -> fait
           o menus pour :
-                + vider la liste des hashs à comparer 
+                + vider la liste des hashs à comparer
     * 07.08.2007
           o la barre de progression :
-                + fait apparaitre le nombre de fichiers trouvés (pendant la 
+                + fait apparaitre le nombre de fichiers trouvés (pendant la
                   recherche)
-                + utilise une deuxième barre de progression pour chaque 
-                  fichier haché dont la taille est supérieure à 4Mo 
+                + utilise une deuxième barre de progression pour chaque
+                  fichier haché dont la taille est supérieure à 4Mo
     * 09.08.2007
-          o Ajout d'une option pour choisir si l'on intègre dans le nom du 
-            fichier tout le répertoire on non (c'est inutile si on hache un 
-            ensemble de fichier triés au préalable) 
+          o Ajout d'une option pour choisir si l'on intègre dans le nom du
+            fichier tout le répertoire on non (c'est inutile si on hache un
+            ensemble de fichier triés au préalable)
     * 05.09.2007
-          o Suppression des deux appels à la fonction g_slist_length dans 
-            les fonctions load_one_file et load_a_complete_directory -> gain 
-            de rapidité. 
+          o Suppression des deux appels à la fonction g_slist_length dans
+            les fonctions load_one_file et load_a_complete_directory -> gain
+            de rapidité.
     * 06.09.2007
-          o Ajout de la possibilité de sauvegarder l'ensemble des hashsets 
+          o Ajout de la possibilité de sauvegarder l'ensemble des hashsets
             chargés en un seul fichier
-          o Ajout de la possibilité de sortir l'ensemble des résultats : 
-            tous les fichiers connus dans la base. Par défaut on ne prend 
-            que le premier trouvé. 
+          o Ajout de la possibilité de sortir l'ensemble des résultats :
+            tous les fichiers connus dans la base. Par défaut on ne prend
+            que le premier trouvé.
     * 07.09.2007
-          o Ajout de la possibilité de choisir le format de sauvegarde, 
-            c'est à dire, avec ou sans le nom du hashset et avec ou sans le 
-            nom du fichier dont le hash est identique. Ces deux options sont 
+          o Ajout de la possibilité de choisir le format de sauvegarde,
+            c'est à dire, avec ou sans le nom du hashset et avec ou sans le
+            nom du fichier dont le hash est identique. Ces deux options sont
             indépendantes l'une de l'autre.
-          o Sauvegarde des hashs issus des résultats de comparaison, écrit 
-            également le nombre de hashs que cela représente (comme pour la 
-            sauvegarde principale) 
+          o Sauvegarde des hashs issus des résultats de comparaison, écrit
+            également le nombre de hashs que cela représente (comme pour la
+            sauvegarde principale)
     * 19.09.2007
-          o Ajout d'une option pour la prise en compte, ou non, des hashs de 
+          o Ajout d'une option pour la prise en compte, ou non, des hashs de
             fichiers vides :
                 + md5 == d41d8cd98f00b204e9800998ecf8427e
                 + sha1 == da39a3ee5e6b4b0d3255bfef95601890afd80709
-                + ripemd160 == 9c1185a5c5e9fc54612808977ee8f548b2258d31 
+                + ripemd160 == 9c1185a5c5e9fc54612808977ee8f548b2258d31
     * 12.10.2007
           o Ajout de menus pour :
                 + vider l'arbre contenant les hashsets
-                + charger un hashset (pour comparaison) 
-          o Changement de la taille du tampon mémoire pour la lecture des 
-            fichiers (de 4ko à 16ko) 
+                + charger un hashset (pour comparaison)
+          o Changement de la taille du tampon mémoire pour la lecture des
+            fichiers (de 4ko à 16ko)
     * 15.10.2007
-          o Possibilité de choisir le nombre de niveau dans l'arborescence 
-            (de 2 à 5) - Par défaut c'est 3 niveaux (65536 listes) 
+          o Possibilité de choisir le nombre de niveau dans l'arborescence
+            (de 2 à 5) - Par défaut c'est 3 niveaux (65536 listes)
     * 18.10.2007
-          o choix du type de hash qui servira à réaliser la comparaison 
-            (md5, sha1 ou ripemd160) 
+          o choix du type de hash qui servira à réaliser la comparaison
+            (md5, sha1 ou ripemd160)
 
 La never Done List :
 
     * 25.07.2007 : Passer les variables hash_md5 len_md5, hash_sha1 len_sha1,
-                   sous forme d'une liste de hash (ne sera pas réalisé pour 
-                   des raisons de performances : taille mémoire, rapidité 
+                   sous forme d'une liste de hash (ne sera pas réalisé pour
+                   des raisons de performances : taille mémoire, rapidité
                    d'accès à la variable)
-    * 18.10.2007 : Dans la même idée, passer ces variables dans la structure 
-                   hex_mdp_t (ce serait plus joli et plus propre en terme de 
-                   programmation mais ça mangerait 12 octets de plus par 
+    * 18.10.2007 : Dans la même idée, passer ces variables dans la structure
+                   hex_mdp_t (ce serait plus joli et plus propre en terme de
+                   programmation mais ça mangerait 12 octets de plus par
                    hash, mais comme on a des structures importantes (> 400 000
                    hashs par exemple -> 4,8 Mo en plus !!) on n'en veux pas!

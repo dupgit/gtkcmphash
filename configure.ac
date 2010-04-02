@@ -30,7 +30,7 @@ AC_SUBST(LIBSSL_VERSION)
 
 AM_MAINTAINER_MODE
 
-dnl Put the preprocessor macros in a header instead of command line 
+dnl Put the preprocessor macros in a header instead of command line
 AC_CONFIG_SRCDIR([src/gtkcmphash.c])
 
 dnl Checks for headers
@@ -50,6 +50,7 @@ AC_FUNC_STAT
 AC_FUNC_STRFTIME
 AC_FUNC_VPRINTF
 AC_CHECK_FUNCS(gettimeofday select socket strdup strerror strstr)
+AC_CHECK_HEADERS(bzlib.h)
 
 dnl dynamic libraries/plugins
 # AC_LIBTOOL_DLOPEN
@@ -64,11 +65,11 @@ dnl Checks for programs
 AM_PROG_LIBTOOL
 
 if test "x$prefix" = "xNONE"; then
-	prefix="/usr/local"
+    prefix="/usr/local"
 fi
 
 if test "x$localstatedir" = "x\${prefix}/var"; then
-	localstatedir="$prefix/var"
+    localstatedir="$prefix/var"
 fi
 
 if test "x$sysconfdir" = "x\${prefix}/etc"; then
@@ -148,16 +149,16 @@ CFLAGS="$CFLAGS -Wall -Wstrict-prototypes -Wmissing-declarations \
 
 case $host in
     *linux*)
-	AC_DEFINE_UNQUOTED(SYS_LINUX,1,[This is a Linux system])
-	PROGRAM_LOCALE_DIR=[${datadir}/locale]
+    AC_DEFINE_UNQUOTED(SYS_LINUX,1,[This is a Linux system])
+    PROGRAM_LOCALE_DIR=[${datadir}/locale]
         AC_SUBST(PROGRAM_LOCALE_DIR)
-	;;
+    ;;
     *mingw*)
-	AC_DEFINE_UNQUOTED(SYS_MINGW,1,[This is a MinGW system])
-     	AC_DEFINE_UNQUOTED(WINDOWS,1,[This is a Windows system])
-     	AC_DEFINE_UNQUOTED(_WIN32,1,[This is a Windows system])
+    AC_DEFINE_UNQUOTED(SYS_MINGW,1,[This is a MinGW system])
+        AC_DEFINE_UNQUOTED(WINDOWS,1,[This is a Windows system])
+        AC_DEFINE_UNQUOTED(_WIN32,1,[This is a Windows system])
         CFLAGS="$CFLAGS -mms-bitfields -mwindows -mno-cygwin"
-	LDFLAGS="$LDFLAGS"
+    LDFLAGS="$LDFLAGS"
         ;;
 esac
 
@@ -234,7 +235,7 @@ AC_OUTPUT
 
 echo
 echo "*** Dumping configuration ***"
-echo 
+echo
 echo "    - Host                   : $host"
 echo "    - Compiler               : ${CC}"
 echo "    - Generate documentation : $enable_gtk_doc"

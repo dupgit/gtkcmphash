@@ -1,5 +1,12 @@
+02.04.2010
+    - Olivier Delhomme <olivier.delhomme@free.fr>
+        * configure.ac now checks for libbz2 (the devel part is mandatory to
+          compile)
+        * corrected a double declaration of the same function !
+
+
 13.05.2008  Olivier Delhomme <olivierdelhomme@gmail.com>
-	    * Modified all calls to functions to libduptools
-	      Also changed the required version from 0.0.3 to 0.0.4
-	    * get rid of specific autotool's version calls
-	    * Changed all header's comments to add year 2008
+        * Modified all calls to functions to libduptools
+          Also changed the required version from 0.0.3 to 0.0.4
+        * get rid of specific autotool's version calls
+        * Changed all header's comments to add year 2008
