@@ -5,7 +5,7 @@
 
    (C) Copyright 2007 - 2008 Olivier Delhomme
    e-mail : olivierdelhomme@gmail.com
- 
+
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation; either version 2, or (at your option)
@@ -18,12 +18,12 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.           
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 */
 #ifndef _GTK_CMP_HASH_H_
 #define _GTK_CMP_HASH_H_
 
-#include <bzlib.h> 
+#include <bzlib.h>
 #include <glade/glade.h>
 #include <glib.h>
 #include <glib/gprintf.h>
@@ -33,7 +33,7 @@
 #include <gtk/gtk.h>
 #include <stdio.h>
 #include <fcntl.h>
-#include <errno.h> 
+#include <errno.h>
 #include <openssl/md5.h>
 #include <stdlib.h>
 #include <string.h>
@@ -62,7 +62,7 @@
 #define GCH_HASH_RIPEMD160 8
 
 /**
- *  Structure regroupant le hash (en binaire) ainsi que sa longueur 
+ *  Structure regroupant le hash (en binaire) ainsi que sa longueur
  */
 typedef struct
 {
@@ -72,9 +72,9 @@ typedef struct
 
 typedef struct
 {
-	gchar *name;  /* nom */
-	guint refs;   /* Nombre de références au nom */
-} hashset_t; 
+    gchar *name;  /* nom */
+    guint refs;   /* Nombre de références au nom */
+} hashset_t;
 
 
 /**
@@ -101,7 +101,7 @@ typedef struct
 
 /**
  *  Structure utilisée pour les résultats de la comparaison
- */ 
+ */
 typedef struct
 {
   gchar *hashset_name;          /* Le nom du hashset dans lequel on a trouvé un md5 identique */
@@ -119,7 +119,7 @@ typedef struct
 typedef struct
 {
   void *array[16]; /* un tableau d'indirections 0 -> 9 + a -> f
-		      qui pointe soit sur un structure arbre_t soit sur une liste de compte_t      */
+                      qui pointe soit sur un structure arbre_t soit sur une liste de compte_t      */
   guint niveau;    /* un indicateur du niveau dans lequel on se trouve (généralement entre 1 et 3) */
 } arbre_t;
 
@@ -172,11 +172,11 @@ typedef struct
 
 /**
  *  Structure pour la gestion des résultats des comparaisons
- *  Attention : 
+ *  Attention :
  *   - found est de type result_hash_t *
  *   - not_found est de type file_hash_t *
  */
-typedef struct 
+typedef struct
 {
   GSList *found;      /* les hashs de la liste qui sont présent dans le hashset ; result_hash_t *  */
   GSList *not_found;  /* les hashs de la liste qui ne sont PAS dans le hashset  ; file_hash_t *    */
@@ -198,7 +198,7 @@ typedef struct
 
 
 /**
- *  Structure principale 
+ *  Structure principale
  */
 typedef struct
 {
