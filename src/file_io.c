@@ -28,21 +28,24 @@ static int compute_one_block(GSList **file_hash_list, gchar *buf, int lus, hashs
 static gchar *make_relative_filename_from_dir(gchar *dirname, gchar *filename);
 static gchar *prepare_le_buffer(void *hash, gboolean save_hashset, options_t *opts);
 
+
 /**
  *  Ouvre le fichier filename s'il existe
  */
 FILE *open_file_if_it_exists(gchar *filename)
 {
-  struct stat *stat_buf = NULL;
+    struct stat *stat_buf = NULL;
 
-  stat_buf = (struct stat *) g_malloc0(sizeof(struct stat));
+    stat_buf = (struct stat *) g_malloc0(sizeof(struct stat));
 
-  if (g_stat(filename, stat_buf) == 0)
-    {
-      return g_fopen(filename, "rb");
-    }
-  else
-      return NULL;
+    if (g_stat(filename, stat_buf) == 0)
+        {
+            return g_fopen(filename, "rb");
+        }
+    else
+        {
+            return NULL;
+        }
 }
 
 
@@ -51,14 +54,18 @@ FILE *open_file_if_it_exists(gchar *filename)
  */
 guint64 file_size(gchar *filename)
 {
-  struct stat *stat_buf = NULL;
+    struct stat *stat_buf = NULL;
 
-  stat_buf = (struct stat *) g_malloc0(sizeof(struct stat));
+    stat_buf = (struct stat *) g_malloc0(sizeof(struct stat));
 
-  if (g_stat(filename, stat_buf) == 0)
-    return (guint64) stat_buf->st_size;
-  else
-    return 0;
+    if (g_stat(filename, stat_buf) == 0)
+        {
+            return (guint64) stat_buf->st_size;
+        }
+    else
+        {
+            return 0;
+        }
 }
 
 
@@ -150,8 +157,11 @@ file_hash_t *hash_a_file(p_bar_t *pb, gchar *filename)
             return the_hash;
         }
     else
-        return NULL;
+        {
+            return NULL;
+        }
 }
+
 
 /**
  *  Traverse l'intégralité d'un dossier
@@ -196,7 +206,9 @@ GSList *traverse_un_dossier(p_bar_t *pb, gchar *dirname, GSList *file_list)
         }
 
     if (error != NULL)
-        fprintf(stdout, "%s\n", error->message);
+        {
+            fprintf(stdout, "%s\n", error->message);
+        }
 
     return file_list;
 }
@@ -257,7 +269,9 @@ GSList *hash_a_directory(main_struct_t *main_struct, gchar *dirname)
                                     integres++;
                                 }
                             else
-                                free_file_hash(file_hash);
+                                {
+                                    free_file_hash(file_hash);
+                                }
                         }
                 }
 
@@ -302,14 +316,21 @@ static gchar *prepare_le_buffer(void *hash, gboolean save_hashset, options_t *op
 
             /* Enregistrement en fonction des options */
             if (opts->include_hashset_name == TRUE && opts->include_hashset_file_filename == TRUE)
-                buf = g_strdup_printf("%s%c%s%c%s%c%s%c%s%c%s%c", file_hash->hashset_name, '\t', file_hash->hashset_file_filename, '\t', file_hash->filename, '\t', md5, '\t', sha1, '\t', ripemd, '\n');
+                {
+                    buf = g_strdup_printf("%s%c%s%c%s%c%s%c%s%c%s%c", file_hash->hashset_name, '\t', file_hash->hashset_file_filename, '\t', file_hash->filename, '\t', md5, '\t', sha1, '\t', ripemd, '\n');
+                }
             else if (opts->include_hashset_name == TRUE)
-                buf = g_strdup_printf("%s%c%s%c%s%c%s%c%s%c", file_hash->hashset_name, '\t', file_hash->filename, '\t', md5, '\t', sha1, '\t', ripemd, '\n');
+                {
+                    buf = g_strdup_printf("%s%c%s%c%s%c%s%c%s%c", file_hash->hashset_name, '\t', file_hash->filename, '\t', md5, '\t', sha1, '\t', ripemd, '\n');
+                }
             else if (opts->include_hashset_file_filename == TRUE)
-                buf = g_strdup_printf("%s%c%s%c%s%c%s%c%s%c", file_hash->hashset_file_filename, '\t', file_hash->filename, '\t', md5, '\t', sha1, '\t', ripemd, '\n');
+                {
+                    buf = g_strdup_printf("%s%c%s%c%s%c%s%c%s%c", file_hash->hashset_file_filename, '\t', file_hash->filename, '\t', md5, '\t', sha1, '\t', ripemd, '\n');
+                }
             else
-                buf = g_strdup_printf("%s%c%s%c%s%c%s%c", file_hash->filename, '\t', md5, '\t', sha1, '\t', ripemd, '\n');
-
+                {
+                    buf = g_strdup_printf("%s%c%s%c%s%c%s%c", file_hash->filename, '\t', md5, '\t', sha1, '\t', ripemd, '\n');
+                }
         }
     else
         {
@@ -329,8 +350,9 @@ static gchar *prepare_le_buffer(void *hash, gboolean save_hashset, options_t *op
     return buf;
 }
 
+
 /**
- *  Sauvegarde les hash. Format du fichier :
+ *  Sauvegarde les hashs. Format du fichier :
  *  nom_du_fichier md5 sha1 ripemd160
  *  séparés par une tabulation et terminé par un caractère \n
  *  Limitation : un fichier ne doit pas avoir de tabulation
@@ -385,18 +407,20 @@ bzip2_result_t *save_the_file_hash_list(GSList *file_hash_list, gchar *filename,
     return res;
 }
 
+
 /**
  *  Sauvegarde l'arbre en entier
  *  TODO : libérer de la mémoire la liste !!
  */
 bzip2_result_t *save_the_hashsets(main_struct_t *main_struct, gchar *filename)
 {
-
     GSList *file_hash_list = NULL;
 
     file_hash_list = transforme_tronc_en_liste(main_struct->tronc);
+
     return save_the_file_hash_list(file_hash_list, filename, FALSE, main_struct->opts);
 }
+
 
 /**
  *  Rempli la structure file_hash_t en lisant une seule ligne
@@ -419,7 +443,9 @@ static file_hash_t *new_from_buffer_line(gchar *buf, int lus, guint n, hashset_t
     /* récupération du nom de fichier */
     j = 0;
     while (buf[n+j] != '\t' && n+j <lus)
-        j++;
+        {
+            j++;
+        }
     filename = (gchar *) g_malloc0(j+1);
     memcpy(filename, buf+n, j);
     filename[j] = (gchar) 0;
@@ -429,7 +455,9 @@ static file_hash_t *new_from_buffer_line(gchar *buf, int lus, guint n, hashset_t
     l = j+1;
     j = 0;
     while (buf[n+l+j] != '\t' && n+l+j <lus)
-        j++;
+        {
+            j++;
+        }
     md5 = (guchar *) g_malloc0(j+1);
     memcpy(md5, buf+n+l, j);
     md5[j] = (guchar) 0;
@@ -441,7 +469,9 @@ static file_hash_t *new_from_buffer_line(gchar *buf, int lus, guint n, hashset_t
     l += j+1;
     j = 0;
     while (buf[n+l+j] != '\t' && n+l+j <lus)
-        j++;
+        {
+            j++;
+        }
     sha1 = (guchar *) g_malloc0(j+1);
     memcpy(sha1, buf+n+l, j);
     sha1[j] = (guchar) 0;
@@ -453,7 +483,9 @@ static file_hash_t *new_from_buffer_line(gchar *buf, int lus, guint n, hashset_t
     l += j+1;
     j = 0;
     while (buf[n+l+j] != '\n' && n+l+j <lus)
-        j++;
+        {
+            j++;
+        }
     ripemd = (guchar *) g_malloc0(j+1);
     memcpy(ripemd, buf+n+l, j);
     ripemd[j] = (guchar) 0;
@@ -480,7 +512,9 @@ static int compute_one_block(GSList **file_hash_list, gchar *buf, int lus, hashs
         {
             /* recherche de la fin de la première ligne (TODO : détecter un \n dans un nom de fichier) */
             while (buf[n+i] != '\n' && n+i < lus-1)  /* < */
-                i++;
+                {
+                    i++;
+                }
 
             if (buf[n+i] == '\n' && n+i <= lus-1)  /* Si on est arrivé avant la fin du bloc */
                 {
@@ -508,16 +542,23 @@ static int compute_one_block(GSList **file_hash_list, gchar *buf, int lus, hashs
                                     hashset->refs++;
                                 }
                             else
-                                free_file_hash(file_hash);
+                                {
+                                    free_file_hash(file_hash);
+                                }
                         }
                 }
         }
 
     if (buf[n+i] != '\n')
-        return n;
+        {
+            return n;
+        }
     else
-        return lus;
+        {
+            return lus;
+        }
 }
+
 
 /**
  *  Extrait dirname de filename pour retourner uniquement la
@@ -539,11 +580,15 @@ static gchar *make_relative_filename_from_dir(gchar *dirname, gchar *filename)
             relative = (gchar *) g_malloc0(rel_len + 1);
             memcpy(relative, filename + dirname_len + 1, rel_len);
             relative[rel_len] = '\0';
+
             return relative;
         }
     else
-        return g_strdup(filename);
+        {
+            return g_strdup(filename);
+        }
 }
+
 
 /**
  *  Charge un seul fichier (au format bzip2) dans une
@@ -619,7 +664,9 @@ GSList *load_one_file(main_struct_t *main_struct, gchar* dirname, gchar *filenam
                                     refresh_file_progress_bar(pb);
                                 }
                             else
-                                stop = TRUE;
+                                {
+                                    stop = TRUE;
+                                }
                         }
                     else
                         {
@@ -643,6 +690,7 @@ GSList *load_one_file(main_struct_t *main_struct, gchar* dirname, gchar *filenam
 
     return file_hash_list;
 }
+
 
 /**
  *  Charge un hashset : un ensemble de fichiers bzip2 contenus
