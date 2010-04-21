@@ -85,6 +85,7 @@ typedef struct
 typedef struct
 {
     guint64 position; /* indique le numéro de chunk dans le fichier (soit sa position) */
+                      /* -1 = tout le fichier */
 
     guchar *hash_md5;     /* le md5 du chunk                                           */
     guint8  len_md5;      /* longueur du md5                                           */
@@ -111,18 +112,19 @@ typedef struct
     hashset_t *hashset;   /* l'éventuel nom du hashset dans lequel est situé le fichier */
     gchar *filename;      /* Le nom du fichier                                          */
 
-    guchar *hash_md5;     /* le md5 du fichier                                          */
-    guint  len_md5;       /* longueur du md5                                            */
+    chunk_t *file_hashs;  /* les hashs du fichier (dans sa totalité)                    */
 
-    guchar *hash_sha1;    /* le sha1 du fichier                                         */
-    guint  len_sha1;      /* longueur du sha1                                           */
+    /* guchar *hash_md5;      le md5 du fichier                                          */
+    /* guint  len_md5;        longueur du md5                                            */
 
-    guchar *hash_ripemd;  /* le ripemd160 du fichier                                    */
-    guint  len_ripemd;    /* longueur du ripemd160                                      */
+    /* guchar *hash_sha1;     le sha1 du fichier                                         */
+    /* guint  len_sha1;       longueur du sha1                                           */
+
+    /* guchar *hash_ripemd;   le ripemd160 du fichier                                    */
+    /* guint  len_ripemd;     longueur du ripemd160                                      */
 
     GSList *chunk_hashs;  /* la liste des hashs des chuncks de 512 octets du fichier    */
                           /* de type chunk_t                                            */
-
 } file_hash_t;
 
 
@@ -134,12 +136,15 @@ typedef struct
     gchar *hashset_name;          /* Le nom du hashset dans lequel on a trouvé un md5 identique */
     gchar *hashset_file_filename; /* le nom du fichier correspondant dans le hashset            */
     gchar *filename;              /* Le nom du fichier original comparé aux hashsets            */
-    guchar *hash_md5;             /* le md5 du fichier original (et de celui du hashset)        */
-    guint  len_md5;               /* longueur du md5                                            */
-    guchar *hash_sha1;            /* le sha1 du fichier                                         */
-    guint  len_sha1;              /* longueur du sha1                                           */
-    guchar *hash_ripemd;          /* le ripemd160 du fichier                                    */
-    guint  len_ripemd;            /* longueur du ripemd160                                      */
+
+    chunk_t *file_hashs;          /* les hashs du fichier (dans sa totalité)                    */
+
+    /* guchar *hash_md5;              le md5 du fichier original (et de celui du hashset)        */
+    /* guint  len_md5;                longueur du md5                                            */
+    /* guchar *hash_sha1;             le sha1 du fichier                                         */
+    /* guint  len_sha1;               longueur du sha1                                           */
+    /* guchar *hash_ripemd;           le ripemd160 du fichier                                    */
+    /* guint  len_ripemd;             longueur du ripemd160                                      */
 } result_hash_t;
 
 

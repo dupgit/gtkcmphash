@@ -68,7 +68,12 @@ guint64 file_size(gchar *filename)
         }
 }
 
-
+/**
+ * @param *buffer : le buffer où les données du fichiers ont été chargées
+ * @param lus : la taille de ce qui a été lus (la taille du buffer)
+ * @param position : un guint64 qui est augmenté de 1 tous les 512 octets traités
+ * @param chunk_hashs : la liste où l'on stocke tous les hashs issus des buffers
+ */
 static GSList *do_chunks_from_buffer(guchar *buffer, size_t lus, guint64 *position, GSList *chunk_hashs)
 {
     const EVP_MD *md5 = NULL;
@@ -121,6 +126,7 @@ static GSList *do_chunks_from_buffer(guchar *buffer, size_t lus, guint64 *positi
                     EVP_DigestUpdate(&sha1_ctx, chunk_buffer, lus);
                     EVP_DigestUpdate(&ripemd_ctx, chunk_buffer, lus);
                     lus = 0;
+                    *position = *position + 1;
                 }
 
             /* Terminaison du calcul des hash */
@@ -129,9 +135,9 @@ static GSList *do_chunks_from_buffer(guchar *buffer, size_t lus, guint64 *positi
             EVP_DigestFinal_ex(&ripemd_ctx, a_chunk_hash->hash_ripemd, &len_ripemd);
 
             a_chunk_hash->position = *position;
-            a_chunk_hash->len_md5 = len_md5;
-            a_chunk_hash->len_sha1 = len_sha1;
-            a_chunk_hash->len_ripemd = len_ripemd;
+            a_chunk_hash->len_md5 = (guint8) len_md5;
+            a_chunk_hash->len_sha1 = (guint8) len_sha1;
+            a_chunk_hash->len_ripemd = (guint8) len_ripemd;
 
             chunk_hashs = g_slist_prepend(chunk_hashs, a_chunk_hash);
         }
@@ -161,7 +167,8 @@ file_hash_t *hash_a_file(p_bar_t *pb, gchar *filename)
     FILE *fp = NULL;
     size_t lus = 0;
     guint64 position = 0;
-    GSList * chunk_hashs = NULL;
+    GSList *chunk_hashs = NULL;
+    chunk_t *file_hashs = NULL;
 
     fp = open_file_if_it_exists(filename);
 
@@ -172,14 +179,17 @@ file_hash_t *hash_a_file(p_bar_t *pb, gchar *filename)
             refresh_file_progress_bar(pb);
 
             the_hash = (file_hash_t *) g_malloc0(sizeof(file_hash_t));
+            file_hashs = (chunk_t *) g_malloc0(sizeof(chunk_t));
             buffer = (guchar *) g_malloc0(FILE_IO_BUFFER_SIZE);
 
             the_hash->hashset = NULL;
             the_hash->filename = g_strdup(filename);
-            the_hash->hash_md5 = (guchar *) g_malloc0(EVP_MAX_MD_SIZE);
+            the_hash->file_hashs = file_hashs;
 
-            the_hash->hash_sha1 = (guchar *) g_malloc0(EVP_MAX_MD_SIZE);
-            the_hash->hash_ripemd = (guchar *) g_malloc0(EVP_MAX_MD_SIZE);
+            the_hash->file_hashs->position = -1; /* pour l'ensemble du fichier */
+            the_hash->file_hashs->hash_md5 = (guchar *) g_malloc0(EVP_MAX_MD_SIZE);
+            the_hash->file_hashs->hash_sha1 = (guchar *) g_malloc0(EVP_MAX_MD_SIZE);
+            the_hash->file_hashs->hash_ripemd = (guchar *) g_malloc0(EVP_MAX_MD_SIZE);
 
             /* Initialisation des contextes */
             EVP_MD_CTX_init(&md5_ctx);
@@ -216,13 +226,15 @@ file_hash_t *hash_a_file(p_bar_t *pb, gchar *filename)
                 }
 
             /* Terminaison du calcul des hash */
-            EVP_DigestFinal_ex(&md5_ctx, the_hash->hash_md5 , &len_md5);
-            EVP_DigestFinal_ex(&sha1_ctx, the_hash->hash_sha1, &len_sha1);
-            EVP_DigestFinal_ex(&ripemd_ctx, the_hash->hash_ripemd, &len_ripemd);
+            EVP_DigestFinal_ex(&md5_ctx, the_hash->file_hashs->hash_md5 , &len_md5);
+            EVP_DigestFinal_ex(&sha1_ctx, the_hash->file_hashs->hash_sha1, &len_sha1);
+            EVP_DigestFinal_ex(&ripemd_ctx, the_hash->file_hashs->hash_ripemd, &len_ripemd);
 
-            the_hash->len_md5 = len_md5;
-            the_hash->len_sha1 = len_sha1;
-            the_hash->len_ripemd = len_ripemd;
+            the_hash->file_hashs->len_md5 = len_md5;
+            the_hash->file_hashs->len_sha1 = len_sha1;
+            the_hash->file_hashs->len_ripemd = len_ripemd;
+
+            the_hash->chunk_hashs = chunk_hashs;
 
             /* Nettoyage des contextes */
             EVP_MD_CTX_cleanup(&md5_ctx);
@@ -291,6 +303,7 @@ GSList *traverse_un_dossier(p_bar_t *pb, gchar *dirname, GSList *file_list)
     return file_list;
 }
 
+
 /**
  *  Traverse un dossier pour en hasher le contenu
  *  Retourne une liste de fichiers hashés (liste de file_hash_t)
@@ -356,7 +369,7 @@ GSList *hash_a_directory(main_struct_t *main_struct, gchar *dirname)
             file_list = g_slist_next(file_list);
 
             /* Refreshing the progress bar */
-            pb->value++;  /* TODO : ecrire une fonction pour ça*/
+            pb->value++;  /* TODO : ecrire une fonction pour ça */
             refresh_progress_bar(pb);
         }
 
@@ -388,42 +401,74 @@ static gchar *prepare_le_buffer(void *hash, gboolean save_hashset, options_t *op
             /* La liste des fichiers connus */
             result_hash_t *file_hash = NULL;
             file_hash = (result_hash_t *) hash;
-            md5 = transforme_le_hash_de_binaire_en_hex(file_hash->hash_md5, file_hash->len_md5);
-            sha1 = transforme_le_hash_de_binaire_en_hex(file_hash->hash_sha1, file_hash->len_sha1);
-            ripemd = transforme_le_hash_de_binaire_en_hex(file_hash->hash_ripemd, file_hash->len_ripemd);
+            md5 = transforme_le_hash_de_binaire_en_hex(file_hash->file_hashs->hash_md5, file_hash->file_hashs->len_md5);
+            sha1 = transforme_le_hash_de_binaire_en_hex(file_hash->file_hashs->hash_sha1, file_hash->file_hashs->len_sha1);
+            ripemd = transforme_le_hash_de_binaire_en_hex(file_hash->file_hashs->hash_ripemd, file_hash->file_hashs->len_ripemd);
 
             /* Enregistrement en fonction des options */
             if (opts->include_hashset_name == TRUE && opts->include_hashset_file_filename == TRUE)
                 {
-                    buf = g_strdup_printf("%s%c%s%c%s%c%s%c%s%c%s%c", file_hash->hashset_name, '\t', file_hash->hashset_file_filename, '\t', file_hash->filename, '\t', md5, '\t', sha1, '\t', ripemd, '\n');
+                    buf = g_strdup_printf("%s%c%s%c%s%c%Ld%c%s%c%s%c%s%c", file_hash->hashset_name, '\t', file_hash->hashset_file_filename, '\t', file_hash->filename, '\t', file_hash->file_hashs->position, '\t', md5, '\t', sha1, '\t', ripemd, '\n');
                 }
             else if (opts->include_hashset_name == TRUE)
                 {
-                    buf = g_strdup_printf("%s%c%s%c%s%c%s%c%s%c", file_hash->hashset_name, '\t', file_hash->filename, '\t', md5, '\t', sha1, '\t', ripemd, '\n');
+                    buf = g_strdup_printf("%s%c%s%c%Ld%c%s%c%s%c%s%c", file_hash->hashset_name, '\t', file_hash->filename, '\t', file_hash->file_hashs->position, '\t', md5, '\t', sha1, '\t', ripemd, '\n');
                 }
             else if (opts->include_hashset_file_filename == TRUE)
                 {
-                    buf = g_strdup_printf("%s%c%s%c%s%c%s%c%s%c", file_hash->hashset_file_filename, '\t', file_hash->filename, '\t', md5, '\t', sha1, '\t', ripemd, '\n');
+                    buf = g_strdup_printf("%s%c%s%c%Ld%c%s%c%s%c%s%c", file_hash->hashset_file_filename, '\t', file_hash->filename, '\t', file_hash->file_hashs->position, '\t', md5, '\t', sha1, '\t', ripemd, '\n');
                 }
             else
                 {
-                    buf = g_strdup_printf("%s%c%s%c%s%c%s%c", file_hash->filename, '\t', md5, '\t', sha1, '\t', ripemd, '\n');
+                    buf = g_strdup_printf("%s%c%Ld%c%s%c%s%c%s%c", file_hash->filename, '\t', file_hash->file_hashs->position, '\t',  md5, '\t', sha1, '\t', ripemd, '\n');
                 }
+
+            g_free(md5);
+            g_free(sha1);
+            g_free(ripemd);
         }
     else
         {
             /* La liste des fichiers inconnus */
-            file_hash_t *file_hash = NULL;
-            file_hash = (file_hash_t *) hash;
-            md5 = transforme_le_hash_de_binaire_en_hex(file_hash->hash_md5, file_hash->len_md5);
-            sha1 = transforme_le_hash_de_binaire_en_hex(file_hash->hash_sha1, file_hash->len_sha1);
-            ripemd = transforme_le_hash_de_binaire_en_hex(file_hash->hash_ripemd, file_hash->len_ripemd);
-            buf = g_strdup_printf("%s%c%s%c%s%c%s%c", file_hash->filename, '\t', md5, '\t', sha1, '\t', ripemd, '\n');
-        }
+            file_hash_t *file_hash = (file_hash_t *) hash;
+            chunk_t *chunk_hash = NULL;
+            GSList *list = NULL;
+            gchar *buf2 = NULL;
+            gchar *buf3 = NULL;
 
-    g_free(md5);
-    g_free(sha1);
-    g_free(ripemd);
+            md5 = transforme_le_hash_de_binaire_en_hex(file_hash->file_hashs->hash_md5, file_hash->file_hashs->len_md5);
+            sha1 = transforme_le_hash_de_binaire_en_hex(file_hash->file_hashs->hash_sha1, file_hash->file_hashs->len_sha1);
+            ripemd = transforme_le_hash_de_binaire_en_hex(file_hash->file_hashs->hash_ripemd, file_hash->file_hashs->len_ripemd);
+
+            buf = g_strdup_printf("%s%c%Ld%c%s%c%s%c%s%c", file_hash->filename, '\t', file_hash->file_hashs->position, '\t', md5, '\t', sha1, '\t', ripemd, '\n');
+
+            g_free(md5);
+            g_free(sha1);
+            g_free(ripemd);
+
+            list = file_hash->chunk_hashs;
+
+            while (list)
+                {
+                    chunk_hash = (chunk_t *) list->data;
+                    md5 = transforme_le_hash_de_binaire_en_hex(chunk_hash->hash_md5, chunk_hash->len_md5);
+                    sha1 = transforme_le_hash_de_binaire_en_hex(chunk_hash->hash_sha1, chunk_hash->len_sha1);
+                    ripemd = transforme_le_hash_de_binaire_en_hex(chunk_hash->hash_ripemd, chunk_hash->len_ripemd);
+
+                    buf2 = g_strdup_printf("%s%c%Ld%c%s%c%s%c%s%c", file_hash->filename, '\t', chunk_hash->position, '\t', md5, '\t', sha1, '\t', ripemd, '\n');
+
+                    buf3 = g_strconcat(buf, buf2, NULL);
+
+                    g_free(buf);
+                    g_free(buf2);
+                    g_free(md5);
+                    g_free(sha1);
+                    g_free(ripemd);
+
+                    buf = buf3;
+                    list = g_slist_next(list);
+                }
+        }
 
     return buf;
 }
@@ -507,6 +552,7 @@ bzip2_result_t *save_the_hashsets(main_struct_t *main_struct, gchar *filename)
 static file_hash_t *new_from_buffer_line(gchar *buf, int lus, guint n, hashset_t *hashset)
 {
     file_hash_t *file_hash = NULL;
+
     guint j = 0;  /* position des \t dans la chaine            */
     guint l = 0;  /* position des \t précédente dans la chaine */
     guchar *md5 = NULL;
@@ -514,7 +560,8 @@ static file_hash_t *new_from_buffer_line(gchar *buf, int lus, guint n, hashset_t
     guchar *ripemd = NULL;
     gchar *filename = NULL;
 
-    file_hash = (file_hash_t *) g_malloc0 (sizeof(file_hash_t));
+    file_hash = (file_hash_t *) g_malloc0(sizeof(file_hash_t));
+    file_hash->file_hashs = (chunk_t *) g_malloc0(sizeof(chunk_t));
 
     file_hash->hashset = hashset;
 
@@ -539,8 +586,8 @@ static file_hash_t *new_from_buffer_line(gchar *buf, int lus, guint n, hashset_t
     md5 = (guchar *) g_malloc0(j+1);
     memcpy(md5, buf+n+l, j);
     md5[j] = (guchar) 0;
-    file_hash->hash_md5 = transforme_le_hash_de_hex_en_binaire(md5);
-    file_hash->len_md5 = j/2;
+    file_hash->file_hashs->hash_md5 = transforme_le_hash_de_hex_en_binaire(md5);
+    file_hash->file_hashs->len_md5 = j/2;
     g_free(md5);
 
     /* récupération du sha1 */
@@ -553,8 +600,8 @@ static file_hash_t *new_from_buffer_line(gchar *buf, int lus, guint n, hashset_t
     sha1 = (guchar *) g_malloc0(j+1);
     memcpy(sha1, buf+n+l, j);
     sha1[j] = (guchar) 0;
-    file_hash->hash_sha1 = transforme_le_hash_de_hex_en_binaire(sha1);
-    file_hash->len_sha1 = j/2;
+    file_hash->file_hashs->hash_sha1 = transforme_le_hash_de_hex_en_binaire(sha1);
+    file_hash->file_hashs->len_sha1 = j/2;
     g_free(sha1);
 
     /* récupération du ripemd */
@@ -567,8 +614,8 @@ static file_hash_t *new_from_buffer_line(gchar *buf, int lus, guint n, hashset_t
     ripemd = (guchar *) g_malloc0(j+1);
     memcpy(ripemd, buf+n+l, j);
     ripemd[j] = (guchar) 0;
-    file_hash->hash_ripemd = transforme_le_hash_de_hex_en_binaire(ripemd);
-    file_hash->len_ripemd = j/2;
+    file_hash->file_hashs->hash_ripemd = transforme_le_hash_de_hex_en_binaire(ripemd);
+    file_hash->file_hashs->len_ripemd = j/2;
     g_free(ripemd);
 
     return file_hash;

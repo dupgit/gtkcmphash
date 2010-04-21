@@ -68,19 +68,19 @@ static guchar *choisit_le_bon_hash(file_hash_t *hash, guint hash_type)
 {
     if (hash_type == GCH_HASH_MD5)
         {
-            return hash->hash_md5;
+            return hash->file_hashs->hash_md5;
         }
     else if (hash_type == GCH_HASH_SHA1)
         {
-            return hash->hash_sha1;
+            return hash->file_hashs->hash_sha1;
         }
     else if (hash_type == GCH_HASH_RIPEMD160)
         {
-            return hash->hash_ripemd;
+            return hash->file_hashs->hash_ripemd;
         }
     else
         {
-            return hash->hash_md5; /* la valeur par défaut */
+            return hash->file_hashs->hash_md5; /* la valeur par défaut */
         }
 }
 
@@ -92,19 +92,19 @@ static gint compare_les_hashs(file_hash_t *hash1, file_hash_t *hash2, guint hash
 {
     if (hash_type == GCH_HASH_MD5)
         {
-        return my_g_ascii_strcasecmp(hash1->hash_md5, hash2->hash_md5, hash2->len_md5);
+        return my_g_ascii_strcasecmp(hash1->file_hashs->hash_md5, hash2->file_hashs->hash_md5, hash2->file_hashs->len_md5);
         }
     else if (hash_type == GCH_HASH_SHA1)
         {
-        return my_g_ascii_strcasecmp(hash1->hash_sha1, hash2->hash_sha1, hash2->len_sha1);
+        return my_g_ascii_strcasecmp(hash1->file_hashs->hash_sha1, hash2->file_hashs->hash_sha1, hash2->file_hashs->len_sha1);
         }
     else if (hash_type == GCH_HASH_RIPEMD160)
         {
-        return my_g_ascii_strcasecmp(hash1->hash_ripemd, hash2->hash_ripemd, hash2->len_ripemd);
+        return my_g_ascii_strcasecmp(hash1->file_hashs->hash_ripemd, hash2->file_hashs->hash_ripemd, hash2->file_hashs->len_ripemd);
         }
     else
         {
-            return my_g_ascii_strcasecmp(hash1->hash_md5, hash2->hash_md5, hash2->len_md5); /* la valeur par défaut */
+            return my_g_ascii_strcasecmp(hash1->file_hashs->hash_md5, hash2->file_hashs->hash_md5, hash2->file_hashs->len_md5); /* la valeur par défaut */
         }
 }
 
@@ -573,6 +573,7 @@ guchar *transforme_le_hash_de_binaire_en_hex(guchar *hash, guint len)
     return md5;
 }
 
+
 /**
  *  Dit si l'un des hashs de file_hash est un hash de fichier vide
  */
@@ -585,16 +586,16 @@ gboolean is_file_hash_empty(file_hash_t *file_hash)
 
     if (file_hash != NULL)
         {
-            result = my_g_ascii_strcasecmp(file_hash->hash_md5, md5_vide, file_hash->len_md5);
+            result = my_g_ascii_strcasecmp(file_hash->file_hashs->hash_md5, md5_vide, file_hash->file_hashs->len_md5);
 
             if (result != 0)
                 {
-                    result = my_g_ascii_strcasecmp(file_hash->hash_sha1, sha1_vide, file_hash->len_sha1);
+                    result = my_g_ascii_strcasecmp(file_hash->file_hashs->hash_sha1, sha1_vide, file_hash->file_hashs->len_sha1);
                 }
 
             if (result != 0)
                 {
-                    result = my_g_ascii_strcasecmp(file_hash->hash_ripemd, ripemd_vide, file_hash->len_ripemd);
+                    result = my_g_ascii_strcasecmp(file_hash->file_hashs->hash_ripemd, ripemd_vide, file_hash->file_hashs->len_ripemd);
                 }
         }
 
@@ -621,19 +622,24 @@ gboolean is_file_hash_empty(file_hash_t *file_hash)
  */
 void free_file_hash(file_hash_t *file_hash)
 {
-    if (file_hash->hash_md5 != NULL)
+    if (file_hash->file_hashs != NULL)
         {
-            g_free(file_hash->hash_md5);
-        }
+            if (file_hash->file_hashs->hash_md5 != NULL)
+                {
+                    g_free(file_hash->file_hashs->hash_md5);
+                }
 
-    if (file_hash->hash_sha1 != NULL)
-        {
-            g_free(file_hash->hash_sha1);
-        }
+            if (file_hash->file_hashs->hash_sha1 != NULL)
+                {
+                    g_free(file_hash->file_hashs->hash_sha1);
+                }
 
-    if (file_hash->hash_ripemd != NULL)
-        {
-            g_free(file_hash->hash_ripemd);
+            if (file_hash->file_hashs->hash_ripemd != NULL)
+                {
+                    g_free(file_hash->file_hashs->hash_ripemd);
+                }
+
+            g_free(file_hash->file_hashs);
         }
 
     if (file_hash->filename != NULL)
@@ -711,9 +717,9 @@ void free_result_hash_list(GSList *result_hash_list)
                     g_free(result_hash->hashset_name);
                     g_free(result_hash->hashset_file_filename);
                     g_free(result_hash->filename);
-                    g_free(result_hash->hash_md5);
-                    g_free(result_hash->hash_sha1);
-                    g_free(result_hash->hash_ripemd);
+                    g_free(result_hash->file_hashs->hash_md5);
+                    g_free(result_hash->file_hashs->hash_sha1);
+                    g_free(result_hash->file_hashs->hash_ripemd);
                     g_free(result_hash);
                 }
 
@@ -821,12 +827,12 @@ static result_hash_t *copie_les_resultats(file_hash_t *file_hash, file_hash_t *r
     all_known_hash->hashset_file_filename = g_strdup(result_hash->filename);
 
     all_known_hash->filename = g_strdup(file_hash->filename);
-    all_known_hash->hash_md5 = my_g_strdup(file_hash->hash_md5, file_hash->len_md5);
-    all_known_hash->len_md5 = file_hash->len_md5;
-    all_known_hash->hash_sha1 = my_g_strdup(file_hash->hash_sha1, file_hash->len_sha1);
-    all_known_hash->len_sha1 = file_hash->len_sha1;
-    all_known_hash->hash_ripemd = my_g_strdup(file_hash->hash_ripemd, file_hash->len_ripemd);
-    all_known_hash->len_ripemd = file_hash->len_ripemd;
+    all_known_hash->file_hashs->hash_md5 = my_g_strdup(file_hash->file_hashs->hash_md5, file_hash->file_hashs->len_md5);
+    all_known_hash->file_hashs->len_md5 = file_hash->file_hashs->len_md5;
+    all_known_hash->file_hashs->hash_sha1 = my_g_strdup(file_hash->file_hashs->hash_sha1, file_hash->file_hashs->len_sha1);
+    all_known_hash->file_hashs->len_sha1 = file_hash->file_hashs->len_sha1;
+    all_known_hash->file_hashs->hash_ripemd = my_g_strdup(file_hash->file_hashs->hash_ripemd, file_hash->file_hashs->len_ripemd);
+    all_known_hash->file_hashs->len_ripemd = file_hash->file_hashs->len_ripemd;
 
     return all_known_hash;
 }
