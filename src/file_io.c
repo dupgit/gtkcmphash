@@ -24,7 +24,7 @@
 #include "gtkcmphash.h"
 
 static file_hash_t *new_from_buffer_line(gchar *buf, int lus, guint n, hashset_t *hashset);
-static int compute_one_block(GSList **file_hash_list, gchar *buf, int lus, hashset_t *hashset, bzip2_result_t *compte, options_t *Opts);
+static int compute_one_block(GSList **file_hash_list, gchar *buf, int lus, hashset_t *hashset, bzip2_result_t *compte, options_t *Opts, gboolean *load_chunks);
 static gchar *make_relative_filename_from_dir(gchar *dirname, gchar *filename);
 static gchar *prepare_le_buffer(void *hash, gboolean save_hashset, options_t *opts);
 
@@ -559,6 +559,8 @@ static file_hash_t *new_from_buffer_line(gchar *buf, int lus, guint n, hashset_t
     guchar *sha1 = NULL;
     guchar *ripemd = NULL;
     gchar *filename = NULL;
+    gchar *str_pos = NULL;
+    long long int pos = 0;
 
     file_hash = (file_hash_t *) g_malloc0(sizeof(file_hash_t));
     file_hash->file_hashs = (chunk_t *) g_malloc0(sizeof(chunk_t));
@@ -576,8 +578,22 @@ static file_hash_t *new_from_buffer_line(gchar *buf, int lus, guint n, hashset_t
     filename[j] = (gchar) 0;
     file_hash->filename = filename;
 
-    /* récupération du md5 */
+    /* Récupération de la position */
     l = j+1;
+    j = 0;
+    while (buf[n+l+j] != '\t' && n+l+j <lus)
+        {
+            j++;
+        }
+    str_pos = (gchar *) g_malloc0(j+1);
+    memcpy(str_pos, buf+n+l, j);
+    str_pos[j] = (gchar) 0;
+    sscanf(str_pos, "%Ld", &pos);
+    file_hash->file_hashs->position = (gint64) pos;
+    g_free(str_pos);
+
+    /* récupération du md5 */
+    l += j+1;
     j = 0;
     while (buf[n+l+j] != '\t' && n+l+j <lus)
         {
@@ -621,17 +637,101 @@ static file_hash_t *new_from_buffer_line(gchar *buf, int lus, guint n, hashset_t
     return file_hash;
 }
 
+/**
+ *  Rempli la structure chunk_t en lisant une seule ligne dans le buffer
+ */
+static chunk_t *new_chunk_from_buffer_line(gchar *buf, int lus, guint n)
+{
+    chunk_t *chunk_hash = NULL;
+
+    guint j = 0;  /* position des \t dans la chaine            */
+    guint l = 0;  /* position des \t précédente dans la chaine */
+    guchar *md5 = NULL;
+    guchar *sha1 = NULL;
+    guchar *ripemd = NULL;
+    gchar *str_pos = NULL;
+    long long int pos = 0;
+
+    chunk_hash = (chunk_t *) g_malloc0(sizeof(chunk_t));
+
+    /* récupération du nom de fichier */
+    j = 0;
+    while (buf[n+j] != '\t' && n+j <lus)
+        {
+            j++;
+        }
+
+    /* Récupération de la position */
+    l = j+1;
+    j = 0;
+    while (buf[n+l+j] != '\t' && n+l+j <lus)
+        {
+            j++;
+        }
+    str_pos = (gchar *) g_malloc0(j+1);
+    memcpy(str_pos, buf+n+l, j);
+    str_pos[j] = (gchar) 0;
+    sscanf(str_pos, "%Ld", &pos);
+    chunk_hash->position = (gint64) pos;
+    g_free(str_pos);
+
+    /* récupération du md5 */
+    l += j+1;
+    j = 0;
+    while (buf[n+l+j] != '\t' && n+l+j <lus)
+        {
+            j++;
+        }
+    md5 = (guchar *) g_malloc0(j+1);
+    memcpy(md5, buf+n+l, j);
+    md5[j] = (guchar) 0;
+    chunk_hash->hash_md5 = transforme_le_hash_de_hex_en_binaire(md5);
+    chunk_hash->len_md5 = j/2;
+    g_free(md5);
+
+    /* récupération du sha1 */
+    l += j+1;
+    j = 0;
+    while (buf[n+l+j] != '\t' && n+l+j <lus)
+        {
+            j++;
+        }
+    sha1 = (guchar *) g_malloc0(j+1);
+    memcpy(sha1, buf+n+l, j);
+    sha1[j] = (guchar) 0;
+    chunk_hash->hash_sha1 = transforme_le_hash_de_hex_en_binaire(sha1);
+    chunk_hash->len_sha1 = j/2;
+    g_free(sha1);
+
+    /* récupération du ripemd */
+    l += j+1;
+    j = 0;
+    while (buf[n+l+j] != '\n' && n+l+j <lus)
+        {
+            j++;
+        }
+    ripemd = (guchar *) g_malloc0(j+1);
+    memcpy(ripemd, buf+n+l, j);
+    ripemd[j] = (guchar) 0;
+    chunk_hash->hash_ripemd = transforme_le_hash_de_hex_en_binaire(ripemd);
+    chunk_hash->len_ripemd = j/2;
+    g_free(ripemd);
+
+    return chunk_hash;
+}
+
 
 /**
  *  Ajoute dans la liste file_hash_list les éléments
  *  contenus dans un bloc de buffer "buf"
  *  retourne le premier caractère d'une chaine non entière
  */
-static int compute_one_block(GSList **file_hash_list, gchar *buf, int lus, hashset_t *hashset, bzip2_result_t *compte, options_t *opts)
+static int compute_one_block(GSList **file_hash_list, gchar *buf, int lus, hashset_t *hashset, bzip2_result_t *compte, options_t *opts, gboolean *load_chunks)
 {
     guint n = 0;  /* position du début de la chaine            */
     guint i = 0;  /* position de la fin de la chaine           */
     file_hash_t *file_hash = NULL;
+    chunk_t *a_chunk = NULL;
 
     while (n+i < lus-1) /* < */
         {
@@ -641,34 +741,55 @@ static int compute_one_block(GSList **file_hash_list, gchar *buf, int lus, hashs
                     i++;
                 }
 
+
             if (buf[n+i] == '\n' && n+i <= lus-1)  /* Si on est arrivé avant la fin du bloc */
                 {
-                    file_hash = new_from_buffer_line(buf, lus, n, hashset); /* lecture d'une ligne */
-                    n += i+1; /* la position du \n +1 */
-                    i = 0;
-
-                    /* insertion dans la liste des fichiers qui sera retournée */
-
-                    if (opts->charger_fv_hashsets == TRUE)
+                    if (*load_chunks == TRUE)
                         {
-                            /* On charge tous les hashs indistinctement */
-                            *file_hash_list =  g_slist_prepend(*file_hash_list, file_hash);
-                            compte->nb_hash++;
-                            hashset->refs++;
+                            a_chunk = new_chunk_from_buffer_line(buf, lus, n);
+                            file_hash->chunk_hashs = g_slist_prepend(file_hash->chunk_hashs, a_chunk); /* lecture d'une ligne */
+                            n += i+1;
+                            i = 0;
+                            if (a_chunk->position == 1)
+                                {
+                                        *load_chunks = FALSE;
+                                }
                         }
                     else
                         {
-                            /* On ne charge que les hashs issus des fichiers non vides */
-                            if (is_file_hash_empty(file_hash) != TRUE)
+
+                            file_hash = new_from_buffer_line(buf, lus, n, hashset); /* lecture d'une ligne */
+                            n += i+1; /* la position du \n +1 */
+                            i = 0;
+                            if (file_hash->file_hashs->position == -1)
                                 {
-                                    /* Si les hash ne sont pas issus d'un fichier vide */
+                                    *load_chunks = TRUE;
+                                    file_hash->chunk_hashs = NULL;
+                                }
+
+                            /* insertion dans la liste des fichiers qui sera retournée */
+
+                            if (opts->charger_fv_hashsets == TRUE)
+                                {
+                                    /* On charge tous les hashs indistinctement */
                                     *file_hash_list =  g_slist_prepend(*file_hash_list, file_hash);
                                     compte->nb_hash++;
                                     hashset->refs++;
                                 }
                             else
                                 {
-                                    free_file_hash(file_hash);
+                                    /* On ne charge que les hashs issus des fichiers non vides */
+                                    if (is_file_hash_empty(file_hash) != TRUE)
+                                        {
+                                            /* Si les hash ne sont pas issus d'un fichier vide */
+                                            *file_hash_list =  g_slist_prepend(*file_hash_list, file_hash);
+                                            compte->nb_hash++;
+                                            hashset->refs++;
+                                        }
+                                    else
+                                        {
+                                            free_file_hash(file_hash);
+                                        }
                                 }
                         }
                 }
@@ -733,6 +854,7 @@ GSList *load_one_file(main_struct_t *main_struct, gchar* dirname, gchar *filenam
     GSList *file_hash_list = NULL;
     gboolean stop = FALSE;
     p_bar_t *pb = main_struct->pb;
+    gboolean load_chunks = FALSE;
 
     buf = (gchar *) g_malloc0(buf_len);
     hashset = (hashset_t *) g_malloc0(sizeof(hashset_t));
@@ -753,7 +875,7 @@ GSList *load_one_file(main_struct_t *main_struct, gchar* dirname, gchar *filenam
             if (lus > 0)
                 {
                     pb->value_file += lus;
-                    faits = compute_one_block(&file_hash_list, buf, lus, hashset, compte, main_struct->opts);
+                    faits = compute_one_block(&file_hash_list, buf, lus, hashset, compte, main_struct->opts, &load_chunks);
                     stop = FALSE;
                     refresh_file_progress_bar(pb);
                 }
@@ -779,7 +901,7 @@ GSList *load_one_file(main_struct_t *main_struct, gchar* dirname, gchar *filenam
                             if (lus > 0)
                                 {
                                     pb->value_file += lus;
-                                    faits = compute_one_block(&file_hash_list, buf, lus+deja_lus, hashset, compte, main_struct->opts);
+                                    faits = compute_one_block(&file_hash_list, buf, lus+deja_lus, hashset, compte, main_struct->opts, &load_chunks);
                                     /* Gestion des effets de bords */
                                     if (faits < lus+deja_lus)
                                         {

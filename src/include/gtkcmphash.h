@@ -84,8 +84,8 @@ typedef struct
  */
 typedef struct
 {
-    guint64 position; /* indique le numéro de chunk dans le fichier (soit sa position) */
-                      /* -1 = tout le fichier */
+    gint64 position; /* indique le numéro de chunk dans le fichier (soit sa position) */
+                     /* -1 = tout le fichier */
 
     guchar *hash_md5;     /* le md5 du chunk                                           */
     guint8  len_md5;      /* longueur du md5                                           */
