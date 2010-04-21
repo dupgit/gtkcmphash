@@ -130,6 +130,7 @@ void pulse_the_progress_bar(p_bar_t *pb)
     g_main_context_iteration(NULL, FALSE);
 }
 
+
 /**
  *  Initialise la barre de progression
  *  Si max = 0 alors en est en mode pulse
@@ -146,7 +147,9 @@ p_bar_t *init_progress_bar(p_bar_t *pb, guint64 max, guint64 max_file)
         {
             fraction = (gdouble) pb->value / (gdouble) pb->max;
             if (fraction >=0 && fraction <=1)
-                gtk_progress_bar_set_fraction(pb->pb_global, fraction);
+                {
+                    gtk_progress_bar_set_fraction(pb->pb_global, fraction);
+                }
 
             label = g_strdup_printf("%Ld / %Ld", pb->value, pb->max);
             gtk_label_set_text(pb->pb_label, label);
@@ -162,14 +165,15 @@ p_bar_t *init_progress_bar(p_bar_t *pb, guint64 max, guint64 max_file)
     return pb;
 }
 
+
 /**
  *  fermeture de la fenêtre de la barre de progression : on ne veux pas !
  */
 static gboolean delete_pb_window_event(GtkWidget *widget, GdkEvent  *event, gpointer data )
 {
-
     return TRUE;
 }
+
 
 /**
  *  destruction de la fenêtre principale : on ne veux pas !
@@ -203,6 +207,7 @@ void init_progress_window(main_struct_t *main_struct)
 
     gtk_widget_show_all(pbw);
 }
+
 
 /**
  *  Remet la fenêtre de la barre de progression et gtk+

@@ -1,3 +1,7 @@
+21.04.2010
+    - Olivier Delhomme <olivier.delhomme@free.fr>
+        * refactoring code (even autogen.sh !)
+
 02.04.2010
     - Olivier Delhomme <olivier.delhomme@free.fr>
         * configure.ac now checks for libbz2 (the devel part is mandatory to
