@@ -98,12 +98,13 @@ static gchar *select_a_folder(GtkWidget *parent)
 
     switch(gtk_dialog_run(GTK_DIALOG(fcd)))
         {
-        case GTK_RESPONSE_OK:
-            /* Récupération du chemin */
-            filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fcd));
+            case GTK_RESPONSE_OK:
+                /* Récupération du chemin */
+                filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fcd));
             break;
-        default:
-            filename = NULL;
+
+            default:
+                filename = NULL;
             break;
         }
 
@@ -111,6 +112,7 @@ static gchar *select_a_folder(GtkWidget *parent)
 
     return filename;
 }
+
 
 /**
  *  Permet la sélection, par l'utilisateur d'un nom de fichier
@@ -136,12 +138,12 @@ static gchar *select_a_file_to_save(GtkWidget *parent)
 
     switch(gtk_dialog_run(GTK_DIALOG(fcd)))
         {
-        case GTK_RESPONSE_OK:
-            /* Récupération du chemin */
-            filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fcd));
+            case GTK_RESPONSE_OK:
+                /* Récupération du chemin */
+                filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fcd));
             break;
-        default:
-            filename = NULL;
+            default:
+                filename = NULL;
             break;
         }
 
@@ -174,12 +176,12 @@ static gchar *select_a_file_to_load(GtkWidget *parent)
 
     switch(gtk_dialog_run(GTK_DIALOG(fcd)))
         {
-        case GTK_RESPONSE_OK:
-            /* Récupération du chemin */
-            filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fcd));
+            case GTK_RESPONSE_OK:
+                /* Récupération du chemin */
+                filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(fcd));
             break;
-        default:
-            filename = NULL;
+            default:
+                filename = NULL;
             break;
         }
 
@@ -187,6 +189,7 @@ static gchar *select_a_file_to_load(GtkWidget *parent)
 
     return filename;
 }
+
 
 /**
  * Gestion de l'affichage des menus reliés aux hashs
@@ -205,6 +208,7 @@ static void make_sensitive_hashs_related(main_struct_t *main_struct)
             gtk_widget_set_sensitive(glade_xml_get_widget(main_struct->xml, "menu_empty_hash_list"), FALSE);
         }
 }
+
 
 /**
  *  Si l'arbre est plein (on a chargé des hashsets) et la liste
@@ -226,6 +230,7 @@ static void make_sensitive_comparison_related(main_struct_t *main_struct)
             gtk_widget_set_sensitive(glade_xml_get_widget(main_struct->xml, "menu_not_in_hashsets"), FALSE);
         }
 }
+
 
 /**
  *  Si l'arbre n'est pas chargé/rempli on ne peut pas sauvegarder ou
@@ -295,6 +300,7 @@ static void enregistre_les_hashs(main_struct_t *main_struct)
         }
 }
 
+
 /**
  *  Menu quitter
  */
@@ -304,6 +310,7 @@ static void menu_quit(GtkWidget *widget, gpointer data)
 
     fin_du_programme(main_struct);
 }
+
 
 /**
  *  Sous menu Log du menu Affichage. Affiche ou cache la fenêtre de log
@@ -324,6 +331,7 @@ static void menu_a_propos( GtkWidget *widget, gpointer data )
     gtk_widget_show(glade_xml_get_widget(main_struct->xml, "about_dialog"));
 }
 
+
 /**
  *  Sous menu pour sauvegarder dans un fichier les
  *  hash calculés
@@ -337,6 +345,7 @@ static void menu_save_hashs(GtkWidget *widget, gpointer data)
             enregistre_les_hashs(main_struct);
         }
 }
+
 
 /**
  *  Sous menu Hacher un répertoire du menu Fichier
@@ -362,6 +371,7 @@ static void menu_hash_a_dir(GtkWidget *widget, gpointer data)
     make_sensitive_hashs_related(main_struct);
     make_sensitive_comparison_related(main_struct);
 }
+
 
 /**
  *  Sous menu Charger un ensemble de hashsets
@@ -390,6 +400,7 @@ static void menu_load_hashsets(GtkWidget *widget, gpointer data)
 
     make_sensitive_comparison_related(main_struct);
 }
+
 
 /**
  *  Sous-menu enregistrer les hashsets
@@ -453,6 +464,7 @@ static void save_the_comparison_results(main_struct_t *main_struct, gboolean in_
         }
 }
 
+
 /**
  *  Log le type de hash utilisé pour la comparaison
  */
@@ -475,6 +487,7 @@ static void log_comparison_type(main_struct_t *main_struct)
             ldt_log_message(main_struct->log, G_LOG_LEVEL_WARNING, "Hash de comparaison inconnu");
         }
 }
+
 
 /**
  *  Sous menu "Pas dans les hashsets" (menu comparaisons)
@@ -517,6 +530,7 @@ static void menu_in_hashsets(GtkWidget *widget, gpointer data)
         }
 }
 
+
 /**
  * Menu qui réalise effectivement la comparaison (ou la recommence)
  * Si la comparaison avait déjà été effectuée, la fonction supprime
@@ -538,6 +552,7 @@ static void menu_do_the_comparison(GtkWidget *widget, gpointer data)
             ldt_log_message(main_struct->log, G_LOG_LEVEL_INFO, "Fin de la comparaison");
         }
 }
+
 
 /**
  *  Menu qui vide la liste des hashs chargés et aussi celles
@@ -562,6 +577,7 @@ static void menu_empty_hash_list(GtkWidget *widget, gpointer data)
         }
 }
 
+
 /**
  *  Menu "Oublier les hashsets"
  */
@@ -584,6 +600,7 @@ static void menu_empty_hashsets(GtkWidget *widget, gpointer data)
     make_sensitive_hashsets_related(main_struct);
     make_sensitive_comparison_related(main_struct);
 }
+
 
 /**
  *  Menu "Charger un hashset"
@@ -633,6 +650,7 @@ static void menu_load_a_hashset(GtkWidget *widget, gpointer data)
     make_sensitive_comparison_related(main_struct);
 }
 
+
 /**
  *  Menu d'affichage de la fenêtre des statistiques
  */
@@ -678,6 +696,7 @@ static void menu_display_stats(GtkWidget *widget, gpointer data)
         }
 }
 
+
 /**
  *  Bouton de fermeture de la fenêtre de statistiques
  */
@@ -699,12 +718,14 @@ static void a_propos_response(GtkWidget *widget, gint response, gpointer data)
     gtk_widget_hide(glade_xml_get_widget(main_struct->xml, "about_dialog"));
 }
 
+
 static void a_propos_close(GtkWidget *widget, gpointer data)
 {
     main_struct_t *main_struct = (main_struct_t *) data;
 
     gtk_widget_hide(glade_xml_get_widget(main_struct->xml, "about_dialog"));
 }
+
 
 static gboolean a_propos_delete(GtkWidget *widget, GdkEvent  *event, gpointer data)
 {
@@ -726,6 +747,7 @@ static gboolean delete_main_window_event(GtkWidget *widget, GdkEvent  *event, gp
     return TRUE;
 }
 
+
 /**
  *  destruction de la fenêtre principale
  */
@@ -735,6 +757,7 @@ static void destroy_main_window(GtkWidget *widget, gpointer data)
 
     fin_du_programme(main_struct);
 }
+
 
 /**
  *  Connecte les signaux correspondant aux menus
@@ -807,6 +830,7 @@ static void connect_signaux_menus(main_struct_t *main_struct)
                      G_CALLBACK(close_stat_window), main_struct);
 }
 
+
 /**
  *  Connecte les signaux correspondant à la boite de dialogue A propos
  */
@@ -821,6 +845,7 @@ static void connect_signaux_about_box(main_struct_t *main_struct)
     g_signal_connect(G_OBJECT(glade_xml_get_widget(main_struct->xml, "about_dialog")), "delete-event",
                      G_CALLBACK(a_propos_delete), main_struct);
 }
+
 
 /**
  *  connection des différents signaux générés par les widgets
@@ -852,10 +877,15 @@ static gboolean load_xml_interface(main_struct_t *main_struct)
     main_struct->xml = ldt_load_glade_xml_file(main_struct->location_list, "gtkcmphash.glade");
 
     if (main_struct->xml == NULL)
-        return FALSE;
+        {
+            return FALSE;
+        }
     else
-        return TRUE;
+        {
+            return TRUE;
+        }
 }
+
 
 /**
  *  Initialisation de l'internationalisation
@@ -922,7 +952,9 @@ static main_struct_t *init_main_struct(void)
             return main_struct;
         }
     else
-        return NULL;
+        {
+            return NULL;
+        }
 }
 
 
@@ -949,6 +981,7 @@ static void set_default_gui_values(main_struct_t *main_struct)
 
 }
 
+
 /**
  *  Initialisation de l'interface préalablement chargée
  */
@@ -973,6 +1006,7 @@ static void init_interface(main_struct_t *main_struct)
     ldt_log_message(main_struct->log, G_LOG_LEVEL_MESSAGE, "Version %s - Date %s - %s", ProgVersion, ProgDate, ProgAuthor);
 
 }
+
 
 /**
  *  Inits the openssl library
