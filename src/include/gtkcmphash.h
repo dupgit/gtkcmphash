@@ -80,7 +80,25 @@ typedef struct
 
 
 /**
- *  Structures de stockage des hash issus des différents fichiers
+ * Structure pour un hash d'un chunk du fichier source (512 octets seulement)
+ */
+typedef struct
+{
+    guint64 position; /* indique le numéro de chunk dans le fichier (soit sa position) */
+
+    guchar *hash_md5;     /* le md5 du chunk                                           */
+    guint8  len_md5;      /* longueur du md5                                           */
+
+    guchar *hash_sha1;    /* le sha1 du chunk                                          */
+    guint8  len_sha1;     /* longueur du sha1                                          */
+
+    guchar *hash_ripemd;  /* le ripemd160 du chunk                                     */
+    guint8  len_ripemd;   /* longueur du ripemd160                                     */
+} chunk_t;
+
+
+/**
+ *  Structures de stockage des hashs issus des différents fichiers
  *  composant le hashset
  *  file_hash_t : pour un seul fichier (utilisé dans une liste pour éviter les collisions)
  *  arbre_t : arbre pour gérer l'ensemble des hash et faire tomber le
@@ -90,16 +108,22 @@ typedef struct
  */
 typedef struct
 {
-    /* gchar *hashset_name;  Le nom du hashset; structure remplacée par un hashset_t * */
-    hashset_t *hashset;
-    gchar *filename;      /* Le nom du fichier       */
-    guchar *hash_md5;     /* le md5 du fichier       */
-    guint  len_md5;       /* longueur du md5         */
-    guchar *hash_sha1;    /* le sha1 du fichier      */
-    guint  len_sha1;      /* longueur du sha1        */
-    guchar *hash_ripemd;  /* le ripemd160 du fichier */
-    guint  len_ripemd;    /* longueur du ripemd160   */
-    } file_hash_t;
+    hashset_t *hashset;   /* l'éventuel nom du hashset dans lequel est situé le fichier */
+    gchar *filename;      /* Le nom du fichier                                          */
+
+    guchar *hash_md5;     /* le md5 du fichier                                          */
+    guint  len_md5;       /* longueur du md5                                            */
+
+    guchar *hash_sha1;    /* le sha1 du fichier                                         */
+    guint  len_sha1;      /* longueur du sha1                                           */
+
+    guchar *hash_ripemd;  /* le ripemd160 du fichier                                    */
+    guint  len_ripemd;    /* longueur du ripemd160                                      */
+
+    GSList *chunk_hashs;  /* la liste des hashs des chuncks de 512 octets du fichier    */
+                          /* de type chunk_t                                            */
+
+} file_hash_t;
 
 
 /**

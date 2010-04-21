@@ -69,6 +69,78 @@ guint64 file_size(gchar *filename)
 }
 
 
+static GSList *do_chunks_from_buffer(guchar *buffer, size_t lus, guint64 *position, GSList *chunk_hashs)
+{
+    const EVP_MD *md5 = NULL;
+    const EVP_MD *sha1 = NULL;
+    const EVP_MD *ripemd = NULL;
+    EVP_MD_CTX md5_ctx;
+    EVP_MD_CTX sha1_ctx;
+    EVP_MD_CTX ripemd_ctx;
+    unsigned int len_md5 = 0;
+    unsigned int len_sha1 = 0;
+    unsigned int len_ripemd = 0;
+
+    chunk_t *a_chunk_hash = NULL;
+    guchar *chunk_buffer = buffer;
+
+    /* traitement de 512 octets dans l'incrément d'une boucle */
+    while (lus > 0)
+        {
+            a_chunk_hash = (chunk_t *) g_malloc0(sizeof(chunk_t));
+
+            a_chunk_hash->hash_md5 = (guchar *) g_malloc0(EVP_MAX_MD_SIZE);
+            a_chunk_hash->hash_sha1 = (guchar *) g_malloc0(EVP_MAX_MD_SIZE);
+            a_chunk_hash->hash_ripemd = (guchar *) g_malloc0(EVP_MAX_MD_SIZE);
+
+            /* Initialisation des contextes */
+            EVP_MD_CTX_init(&md5_ctx);
+            EVP_MD_CTX_init(&sha1_ctx);
+            EVP_MD_CTX_init(&ripemd_ctx);
+
+            /* Initialisations des hash */
+            md5 = EVP_get_digestbyname("md5");
+            EVP_DigestInit_ex(&md5_ctx, md5, NULL);
+            sha1 = EVP_get_digestbyname("sha1");
+            EVP_DigestInit_ex(&sha1_ctx, sha1, NULL);
+            ripemd = EVP_get_digestbyname("ripemd160");
+            EVP_DigestInit_ex(&ripemd_ctx, ripemd, NULL);
+
+            if (lus >= 512)
+                {
+                    EVP_DigestUpdate(&md5_ctx, chunk_buffer, 512);
+                    EVP_DigestUpdate(&sha1_ctx, chunk_buffer, 512);
+                    EVP_DigestUpdate(&ripemd_ctx, chunk_buffer, 512);
+                    lus = lus - 512;
+                    chunk_buffer = chunk_buffer + 512;
+                    *position = *position + 1;
+                }
+            else
+                {
+                    EVP_DigestUpdate(&md5_ctx, chunk_buffer, lus);
+                    EVP_DigestUpdate(&sha1_ctx, chunk_buffer, lus);
+                    EVP_DigestUpdate(&ripemd_ctx, chunk_buffer, lus);
+                    lus = 0;
+                }
+
+            /* Terminaison du calcul des hash */
+            EVP_DigestFinal_ex(&md5_ctx, a_chunk_hash->hash_md5 , &len_md5);
+            EVP_DigestFinal_ex(&sha1_ctx, a_chunk_hash->hash_sha1, &len_sha1);
+            EVP_DigestFinal_ex(&ripemd_ctx, a_chunk_hash->hash_ripemd, &len_ripemd);
+
+            a_chunk_hash->position = *position;
+            a_chunk_hash->len_md5 = len_md5;
+            a_chunk_hash->len_sha1 = len_sha1;
+            a_chunk_hash->len_ripemd = len_ripemd;
+
+            chunk_hashs = g_slist_prepend(chunk_hashs, a_chunk_hash);
+        }
+
+        return chunk_hashs;
+
+}
+
+
 /**
  *  Produit les hashs d'un fichier donné (filename)
  *  MD5, SHA1 et RIPEMD160 en une seule passe
@@ -88,6 +160,8 @@ file_hash_t *hash_a_file(p_bar_t *pb, gchar *filename)
     guchar *buffer = NULL;
     FILE *fp = NULL;
     size_t lus = 0;
+    guint64 position = 0;
+    GSList * chunk_hashs = NULL;
 
     fp = open_file_if_it_exists(filename);
 
@@ -120,6 +194,8 @@ file_hash_t *hash_a_file(p_bar_t *pb, gchar *filename)
             ripemd = EVP_get_digestbyname("ripemd160");
             EVP_DigestInit_ex(&ripemd_ctx, ripemd, NULL);
 
+            position = 0;
+
             /* Lecture du fichier */
             while (!feof(fp))
                 {
@@ -131,6 +207,8 @@ file_hash_t *hash_a_file(p_bar_t *pb, gchar *filename)
                             pb->value_file += lus;
                             refresh_file_progress_bar(pb);
                         }
+
+                    chunk_hashs = do_chunks_from_buffer(buffer, lus, &position, chunk_hashs);
 
                     EVP_DigestUpdate(&md5_ctx, buffer, lus);
                     EVP_DigestUpdate(&sha1_ctx, buffer, lus);
