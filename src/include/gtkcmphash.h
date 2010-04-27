@@ -178,6 +178,18 @@ typedef struct
 
 
 /**
+ * Structure pour la gestion des paramètres lors de la lecture des données
+ */
+typedef struct
+{
+    GSList *file_hash_list;  /* la liste des fichiers et leurs hashs                       */
+    gchar *filename;         /* Le nom du fichier en cours                                 */
+    int lus;                 /* Nombre d'octets dans le buffer (en général = à len_buf)    */
+    file_hash_t *file_hash;  /* le fichier en cours, notamment lorsqu'il s'agit d'un chunk */
+} compute_block_t;
+
+
+/**
  *  Structure pour la gestion des options
  */
 typedef struct
