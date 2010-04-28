@@ -321,6 +321,7 @@ void insere_la_liste_dans_tronc(hash_t *tronc, GSList *file_hash_list, guint has
                     head = file_hash->chunk_hashs;
                     while (head)
                         {
+                            tmp_file_hash = (file_hash_t *) g_malloc0(sizeof(file_hash_t));
                             tmp_file_hash->filename = g_strdup(file_hash->filename);
                             tmp_file_hash->hashset = file_hash->hashset;
                             file_hash->hashset->refs += 1;
