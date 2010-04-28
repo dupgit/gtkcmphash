@@ -21,13 +21,13 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 */
 /**
- *  Gestion du chargement, de la mise en mémoire et des comparaisons
+ *  Gestion du chargement, de la mise en mÃ©moire et des comparaisons
  *  des hashs
  *  Utilisation de la structure :
- *   - Création de l'arbre/tronc : nouveau_tronc(niveau)
- *     niveau indique le nombre d'indirections (intéressant à partir de 2)
+ *   - CrÃ©ation de l'arbre/tronc : nouveau_tronc(niveau)
+ *     niveau indique le nombre d'indirections (intÃ©ressant Ã  partir de 2)
  *   - Insertion dans l'arbre/tronc : insere_dans_tronc(tronc, file_hash)
- *     Insère file_hash dans le tronc (là où il faut)
+ *     InsÃ¨re file_hash dans le tronc (lÃ  oÃ¹ il faut)
  *   - Recherche : recherche_dans_tronc(tronc, file_hash)
  *     Recherche file_hash rapidement (en quelques comparaisons) avec
  *     gestion des collisions
@@ -61,7 +61,7 @@ static void do_stats_arbre(arbre_t *arbre, guint niveau_max, structure_stat_t *t
 
 
 /**
- *  Retourne le pointeur sur le hash adéquat en fonction du
+ *  Retourne le pointeur sur le hash adÃ©quat en fonction du
  *  type choisit
  */
 static guchar *choisit_le_bon_hash(file_hash_t *hash, guint hash_type)
@@ -80,7 +80,7 @@ static guchar *choisit_le_bon_hash(file_hash_t *hash, guint hash_type)
         }
     else
         {
-            return hash->file_hashs->hash_md5; /* la valeur par défaut */
+            return hash->file_hashs->hash_md5; /* la valeur par dÃ©faut */
         }
 }
 
@@ -104,13 +104,13 @@ static gint compare_les_hashs(file_hash_t *hash1, file_hash_t *hash2, guint hash
         }
     else
         {
-            return my_g_ascii_strcasecmp(hash1->file_hashs->hash_md5, hash2->file_hashs->hash_md5, hash2->file_hashs->len_md5); /* la valeur par défaut */
+            return my_g_ascii_strcasecmp(hash1->file_hashs->hash_md5, hash2->file_hashs->hash_md5, hash2->file_hashs->len_md5); /* la valeur par dÃ©faut */
         }
 }
 
 
 /**
- *  Crée un nouvel arbre de profondeur "niveau_max", à partir de "niveau"
+ *  CrÃ©e un nouvel arbre de profondeur "niveau_max", Ã  partir de "niveau"
  */
 static arbre_t *nouvel_arbre(guint niveau_max, guint niveau)
 {
@@ -161,7 +161,7 @@ hash_t *nouveau_tronc(guint niveau_max)
 
 
 /**
- *  Clé de hashage (à partir d'un octet renvoi 16
+ *  ClÃ© de hashage (Ã  partir d'un octet renvoi 16
  *  cas possibles)
  */
 static guint cle_de_hashage(guchar c)
@@ -171,7 +171,7 @@ static guint cle_de_hashage(guchar c)
 
 
 /**
- *  Retourne la valeur du caractère héxadécimal en décimal
+ *  Retourne la valeur du caractÃ¨re hÃ©xadÃ©cimal en dÃ©cimal
  *  0->0 ... 9->9, a->10, ... f->15 sinon 0
  */
 static guint int_value_of_hex(guchar c)
@@ -250,8 +250,8 @@ static guint int_value_of_hex(guchar c)
 
 
 /**
- *  Insère le file_hash d'un fichier dans une liste
- *  crée éventuellement cette liste
+ *  InsÃ¨re le file_hash d'un fichier dans une liste
+ *  crÃ©e Ã©ventuellement cette liste
  */
 static GSList *insere_dans_liste(GSList *list, file_hash_t *file_hash)
 {
@@ -263,8 +263,8 @@ static GSList *insere_dans_liste(GSList *list, file_hash_t *file_hash)
 
 
 /**
- *  Insère un file_hash d'un fichier dans l'arbre (en fonction de son md5)
- *  TODO : laisser le choix à l'utilisateur du hash servant de comparaison
+ *  InsÃ¨re un file_hash d'un fichier dans l'arbre (en fonction de son md5)
+ *  TODO : laisser le choix Ã  l'utilisateur du hash servant de comparaison
  */
 static void insere_dans_arbre(arbre_t *arbre, guint niveau_max, guint hash_type, file_hash_t *file_hash)
 {
@@ -287,7 +287,7 @@ static void insere_dans_arbre(arbre_t *arbre, guint niveau_max, guint hash_type,
 
 
 /**
- *  Insère un file_hash d'un fichier dans la structure
+ *  InsÃ¨re un file_hash d'un fichier dans la structure
  */
 void insere_dans_tronc(hash_t *tronc, file_hash_t *file_hash, guint hash_type)
 {
@@ -302,7 +302,7 @@ void insere_dans_tronc(hash_t *tronc, file_hash_t *file_hash, guint hash_type)
 
 
 /**
- *  Insère toute une liste de file_hash dans la structure tronc
+ *  InsÃ¨re toute une liste de file_hash dans la structure tronc
  */
 void insere_la_liste_dans_tronc(hash_t *tronc, GSList *file_hash_list, guint hash_type)
 {
@@ -323,9 +323,9 @@ void insere_la_liste_dans_tronc(hash_t *tronc, GSList *file_hash_list, guint has
 
 
 /**
- *  Procédure copiée de la glib, mais dans laquelle
- *  j'ai enlevé les TOLOWER dont je n'ai absolument
- *  pas besoin... donc gain de rapidité (c'est plus rapide que memcmp)
+ *  ProcÃ©dure copiÃ©e de la glib, mais dans laquelle
+ *  j'ai enlevÃ© les TOLOWER dont je n'ai absolument
+ *  pas besoin... donc gain de rapiditÃ© (c'est plus rapide que memcmp)
  */
 gint my_g_ascii_strcasecmp(const guchar *s1, const guchar *s2, guint len)
 {
@@ -347,8 +347,8 @@ gint my_g_ascii_strcasecmp(const guchar *s1, const guchar *s2, guint len)
 
 
 /**
- *  Procédure récupérée de la glib et transformée pour
- *  qu'elle ait en entrée et en sortie le type guchar
+ *  ProcÃ©dure rÃ©cupÃ©rÃ©e de la glib et transformÃ©e pour
+ *  qu'elle ait en entrÃ©e et en sortie le type guchar
  *  et qu'on puisse copier une chaine binaire (avec des 0x00)
  */
 guchar *my_g_strdup(const guchar *str, guint length)
@@ -370,8 +370,8 @@ guchar *my_g_strdup(const guchar *str, guint length)
 
 
 /**
- *  Recherche dans la liste d'éventuels fichiers ayant un hash
- *  identique à celui de file_hash (utilise le md5)
+ *  Recherche dans la liste d'Ã©ventuels fichiers ayant un hash
+ *  identique Ã  celui de file_hash (utilise le md5)
  */
 static GSList *recherche_dans_liste(GSList *list, file_hash_t *file_hash, guint hash_type)
 {
@@ -410,8 +410,8 @@ static GSList *recherche_dans_arbre(arbre_t *arbre, guint niveau_max, guint hash
 
     hash = choisit_le_bon_hash(file_hash, hash_type);
 
-    /* il faut utiliser la même clef que celle de l'insertion */
-    /* TODO : donner le choix de la clef à l'utilisateur      */
+    /* il faut utiliser la mÃªme clef que celle de l'insertion */
+    /* TODO : donner le choix de la clef Ã  l'utilisateur      */
     numero_liste = cle_de_hashage(hash[arbre->niveau-1]);
 
     if (arbre->niveau >= niveau_max)
@@ -426,7 +426,7 @@ static GSList *recherche_dans_arbre(arbre_t *arbre, guint niveau_max, guint hash
 
 
 /**
- *  Recherche si le hash "hash" est présent dans la structure de données
+ *  Recherche si le hash "hash" est prÃ©sent dans la structure de donnÃ©es
  *  la fonction retourne la liste des hash correspondant
  *  NULL dans les autres cas
  */
@@ -444,7 +444,7 @@ GSList *recherche_dans_tronc(hash_t *tronc, file_hash_t *file_hash, guint hash_t
 
 
 /**
- *  Concatène les sous-listes
+ *  ConcatÃ¨ne les sous-listes
  */
 static GSList *concatene_les_listes(arbre_t *arbre)
 {
@@ -464,7 +464,7 @@ static GSList *concatene_les_listes(arbre_t *arbre)
 
 
 /**
- *  Concatène le résultat des différents sous-arbres
+ *  ConcatÃ¨ne le rÃ©sultat des diffÃ©rents sous-arbres
  */
 static GSList *concatene_les_arbres(arbre_t *arbre, guint niveau_max)
 {
@@ -486,7 +486,7 @@ static GSList *concatene_les_arbres(arbre_t *arbre, guint niveau_max)
 
 
 /**
- *  Remet l'arbre à plat
+ *  Remet l'arbre Ã  plat
  */
 static GSList *transforme_arbre_en_liste(arbre_t *arbre, guint niveau_max)
 {
@@ -502,7 +502,7 @@ static GSList *transforme_arbre_en_liste(arbre_t *arbre, guint niveau_max)
 
 
 /**
- *  Remet le tronc à plat
+ *  Remet le tronc Ã  plat
  */
 GSList *transforme_tronc_en_liste(hash_t *tronc)
 {
@@ -518,9 +518,9 @@ GSList *transforme_tronc_en_liste(hash_t *tronc)
 
 
 /**
- *  Procédure qui transforme le hash b1f548... en son
- *  équivalent binaire; Réalise un g_malloc0 qu'on pourra
- *  libérer avec un g_free par la suite.
+ *  ProcÃ©dure qui transforme le hash b1f548... en son
+ *  Ã©quivalent binaire; RÃ©alise un g_malloc0 qu'on pourra
+ *  libÃ©rer avec un g_free par la suite.
  */
 guchar *transforme_le_hash_de_hex_en_binaire(guchar *hash)
 {
@@ -548,8 +548,8 @@ guchar *transforme_le_hash_de_hex_en_binaire(guchar *hash)
 
 /**
  *  Fonction qui transforme un hash sous forme binaire
- *  en un hash sous forme hexadécimale affichable "12f5cda5..."
- *  Réalise un g_malloc0 qu'on pourra libérer par la suite avec
+ *  en un hash sous forme hexadÃ©cimale affichable "12f5cda5..."
+ *  RÃ©alise un g_malloc0 qu'on pourra libÃ©rer par la suite avec
  *  un g_free
  */
 guchar *transforme_le_hash_de_binaire_en_hex(guchar *hash, guint len)
@@ -615,10 +615,10 @@ gboolean is_file_hash_empty(file_hash_t *file_hash)
 
 
 /**
- *  Fonction de libération d'un file_hash
+ *  Fonction de libÃ©ration d'un file_hash
  *  On ne supprime pas le hashset_name qui n'est pas inclus dans
- *  chaque structure (donc si on le libère en cours de route,
- *  on le perd définitivement)
+ *  chaque structure (donc si on le libÃ¨re en cours de route,
+ *  on le perd dÃ©finitivement)
  */
 void free_file_hash(file_hash_t *file_hash)
 {
@@ -650,12 +650,12 @@ void free_file_hash(file_hash_t *file_hash)
 
 
 /**
- * Libération du hashset->name qui n'est stocké en mémoire
+ * LibÃ©ration du hashset->name qui n'est stockÃ© en mÃ©moire
  * qu'une seule fois (ou du moins, le moins possible)
  */
 static void free_file_hash_hashset(hashset_t *hashset)
 {
-  /* Il peut y avoir un double appel a free pour un même pointeur */
+  /* Il peut y avoir un double appel a free pour un mÃªme pointeur */
 
     if (hashset != NULL)
         {
@@ -673,7 +673,7 @@ static void free_file_hash_hashset(hashset_t *hashset)
 
 
 /**
- *  Fonction de libération de la liste (libération totale)
+ *  Fonction de libÃ©ration de la liste (libÃ©ration totale)
  *  perte du hashset_name !
  */
 void free_file_hash_list(GSList *file_hash_list)
@@ -700,8 +700,8 @@ void free_file_hash_list(GSList *file_hash_list)
 
 
 /**
- *  Fonction de libération de la liste des résultats (libération totale)
- *  La mémoire est gérée différemment de la la liste file_hash_list
+ *  Fonction de libÃ©ration de la liste des rÃ©sultats (libÃ©ration totale)
+ *  La mÃ©moire est gÃ©rÃ©e diffÃ©remment de la la liste file_hash_list
  */
 void free_result_hash_list(GSList *result_hash_list)
 {
@@ -731,15 +731,15 @@ void free_result_hash_list(GSList *result_hash_list)
 
 
 /**
- *  Libération de la liste des résultats
- *  Attention aucun test n'est effectué sur la structure
+ *  LibÃ©ration de la liste des rÃ©sultats
+ *  Attention aucun test n'est effectuÃ© sur la structure
  */
 void free_dedans_ou_pas(main_struct_t *main_struct)
 {
-    /* on peut tout libérer, normalement cette liste est formée par copie */
+    /* on peut tout libÃ©rer, normalement cette liste est formÃ©e par copie */
     free_result_hash_list(main_struct->dedans_ou_pas->found);
 
-    /* Si on libère la structure -> la liste d'origine sera libérée ! */
+    /* Si on libÃ¨re la structure -> la liste d'origine sera libÃ©rÃ©e ! */
     g_slist_free(main_struct->dedans_ou_pas->not_found);
 
     main_struct->dedans_ou_pas->found = NULL;
@@ -748,7 +748,7 @@ void free_dedans_ou_pas(main_struct_t *main_struct)
 
 
 /**
- *  Libere les listes. arbre doit être non NULL
+ *  Libere les listes. arbre doit Ãªtre non NULL
  */
 static void libere_les_listes(arbre_t *arbre)
 {
@@ -764,7 +764,7 @@ static void libere_les_listes(arbre_t *arbre)
 }
 
 /**
- *  Libere les sous arbres. arbre doit être non NULL
+ *  Libere les sous arbres. arbre doit Ãªtre non NULL
  */
 static void libere_les_arbres(arbre_t *arbre, guint niveau_max)
 {
@@ -775,12 +775,12 @@ static void libere_les_arbres(arbre_t *arbre, guint niveau_max)
             free_arbre(arbre->array[i], niveau_max);
         }
 
-    g_free(arbre);  /* la sous branche est libérée */
+    g_free(arbre);  /* la sous branche est libÃ©rÃ©e */
 
 }
 
 /**
- *  Vide l'intégralité des arbres (récursif)
+ *  Vide l'intÃ©gralitÃ© des arbres (rÃ©cursif)
  */
 static void free_arbre(arbre_t *arbre, guint niveau_max)
 {
@@ -799,7 +799,7 @@ static void free_arbre(arbre_t *arbre, guint niveau_max)
 }
 
 /**
- *   Libère l'intégralité des listes de la structure
+ *   LibÃ¨re l'intÃ©gralitÃ© des listes de la structure
  */
 void free_tronc(hash_t *tronc)
 {
@@ -814,8 +814,8 @@ void free_tronc(hash_t *tronc)
 
 
 /**
- *  Copie les informations adéquates dans une nouvelle
- *  structure qui est retournée
+ *  Copie les informations adÃ©quates dans une nouvelle
+ *  structure qui est retournÃ©e
  */
 static result_hash_t *copie_les_resultats(file_hash_t *file_hash, file_hash_t *result_hash)
 {
@@ -838,8 +838,8 @@ static result_hash_t *copie_les_resultats(file_hash_t *file_hash, file_hash_t *r
 }
 
 /**
- *  Insère, en fonction des options, les fichiers connus dans la liste
- *  Attention la liste contient des éléments de type result_hash_t *
+ *  InsÃ¨re, en fonction des options, les fichiers connus dans la liste
+ *  Attention la liste contient des Ã©lÃ©ments de type result_hash_t *
  */
 static GSList *forme_la_liste_des_connus(GSList *found, GSList *result, file_hash_t *file_hash, options_t *opts)
 {
@@ -848,7 +848,7 @@ static GSList *forme_la_liste_des_connus(GSList *found, GSList *result, file_has
 
     if (opts->all_known == TRUE)
         {
-            /* intègre tous les fichiers connus */
+            /* intÃ¨gre tous les fichiers connus */
             while (result != NULL)
                 {
                     result_hash = (file_hash_t *) result->data;
@@ -859,8 +859,8 @@ static GSList *forme_la_liste_des_connus(GSList *found, GSList *result, file_has
 
                     result = g_slist_next(result);
 
-                    /* On ne libère pas de mémoire car tout est dans la liste pour une   */
-                    /* utilisation ultérieure. La libération intervient dans la fonction */
+                    /* On ne libÃ¨re pas de mÃ©moire car tout est dans la liste pour une   */
+                    /* utilisation ultÃ©rieure. La libÃ©ration intervient dans la fonction */
                     /* free_file_hash_list(GSList *file_hash_list) plus haut             */
                 }
         }
@@ -877,13 +877,13 @@ static GSList *forme_la_liste_des_connus(GSList *found, GSList *result, file_has
 }
 
 /**
- *  Fonction pour trouver les différences entre une liste de fichiers
- *  hachés et un hashset chargés en mémoire
+ *  Fonction pour trouver les diffÃ©rences entre une liste de fichiers
+ *  hachÃ©s et un hashset chargÃ©s en mÃ©moire
  */
 found_or_not_t *find_all_hashes_from_hashset(GSList *file_hash_list, hash_t *tronc, options_t *opts)
 {
-    file_hash_t *file_hash = NULL; /* pour parcourir la liste des fichiers hachés */
-    GSList *result = NULL;  /* résultat de la recherche dans l'arbre */
+    file_hash_t *file_hash = NULL; /* pour parcourir la liste des fichiers hachÃ©s */
+    GSList *result = NULL;  /* rÃ©sultat de la recherche dans l'arbre */
     found_or_not_t *dedans_ou_pas = NULL;
 
     dedans_ou_pas = (found_or_not_t *) g_malloc0(sizeof(found_or_not_t));
@@ -896,7 +896,7 @@ found_or_not_t *find_all_hashes_from_hashset(GSList *file_hash_list, hash_t *tro
 
             if (file_hash != NULL)
                 {
-                    /* retourne la liste de tous les fichiers qui ont le même hash */
+                    /* retourne la liste de tous les fichiers qui ont le mÃªme hash */
                     result = recherche_dans_tronc(tronc, file_hash, opts->hash_type);
 
                     if (result != NULL)
@@ -919,7 +919,7 @@ found_or_not_t *find_all_hashes_from_hashset(GSList *file_hash_list, hash_t *tro
 
 
 /**
- *  Appel terminal qui réalise la comptabilité pour les listes
+ *  Appel terminal qui rÃ©alise la comptabilitÃ© pour les listes
  */
 static void comptabilise_les_listes(arbre_t *arbre, structure_stat_t *the_stats)
 {
@@ -956,7 +956,7 @@ static void comptabilise_les_listes(arbre_t *arbre, structure_stat_t *the_stats)
 
 
 /**
- *  Appel récursif permettant la prise en compte des sous-arbres
+ *  Appel rÃ©cursif permettant la prise en compte des sous-arbres
  */
 static void comptabilise_les_arbres(arbre_t *arbre, guint niveau_max, structure_stat_t *the_stats)
 {

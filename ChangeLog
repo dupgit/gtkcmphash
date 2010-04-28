@@ -1,6 +1,9 @@
 28.04.2010
        - Olivier Delhomme <olivier.delhomme@free.fr>
         * Code simplification
+        * using g_ascii_strcasecmp function (to be able to use this code with
+          gtk version <= 2.10)
+        * Now all files are UTF-8 Encoded
 
 27.04.2010
     - Olivier Delhomme <olivier.delhomme@free.fr>

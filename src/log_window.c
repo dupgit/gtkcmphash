@@ -38,7 +38,7 @@ void show_hide_log_window(main_struct_t *main_struct, gboolean show)
 
 
 /**
- *  Lorsqu'on clique sur le bouton "Quitter" de la fenêtre de log
+ *  Lorsqu'on clique sur le bouton "Quitter" de la fenÃªtre de log
  */
 static void quit_log_window(GtkWidget *widget, gpointer data)
 {
@@ -51,7 +51,7 @@ static void quit_log_window(GtkWidget *widget, gpointer data)
 
 
 /**
- *  Connexion des signaux correspondant à la fenêtre de log
+ *  Connexion des signaux correspondant Ã  la fenÃªtre de log
  */
 static void connect_log_window_signals(main_struct_t *main_struct)
 {
@@ -62,13 +62,13 @@ static void connect_log_window_signals(main_struct_t *main_struct)
 
 
 /**
- *  Initialisation du système de log
+ *  Initialisation du systÃ¨me de log
  */
 void init_log_window(main_struct_t *main_struct)
 {
       GtkTextView *textview = GTK_TEXT_VIEW(glade_xml_get_widget(main_struct->xml, "lw_textview"));
 
-      /* Ajoute le textview au système de log */
+      /* Ajoute le textview au systÃ¨me de log */
       main_struct->log = ldt_init_log_domain(textview, ProgName, PROGRAM_DEBUG);
 
       connect_log_window_signals(main_struct);

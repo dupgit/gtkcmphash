@@ -53,12 +53,12 @@
 #define ProgDate "18.10.2007"
 #define ProgAuthor "Olivier Delhomme"
 
-#define GCH_NB_INDIRECT 3      /* valeur par défaut pour le nombre d'indirections                              */
-#define GCH_NB_INDIRECT_MIN 2  /* valeurs minimales et maximales autorisées pour la structure.                 */
-#define GCH_NB_INDIRECT_MAX 5  /* définies ici pour éviter tout problème même en cas de modification du .glade */
+#define GCH_NB_INDIRECT 3      /* valeur par dÃ©faut pour le nombre d'indirections                              */
+#define GCH_NB_INDIRECT_MIN 2  /* valeurs minimales et maximales autorisÃ©es pour la structure.                 */
+#define GCH_NB_INDIRECT_MAX 5  /* dÃ©finies ici pour Ã©viter tout problÃ¨me mÃªme en cas de modification du .glade */
 
-#define GCH_HASH_MD5 2         /* definition des types de hash utilisés pour la comparaison */
-#define GCH_HASH_SHA1 4        /* Les valeurs doivent être non signées                      */
+#define GCH_HASH_MD5 2         /* definition des types de hash utilisÃ©s pour la comparaison */
+#define GCH_HASH_SHA1 4        /* Les valeurs doivent Ãªtre non signÃ©es                      */
 #define GCH_HASH_RIPEMD160 8
 
 
@@ -67,15 +67,15 @@
  */
 typedef struct
 {
-    guchar *hash;    /* l'écriture en binaire du hash  */
-    guint hash_len;  /* la longueur de cette dernière  */
+    guchar *hash;    /* l'Ã©criture en binaire du hash  */
+    guint hash_len;  /* la longueur de cette derniÃ¨re  */
 } hex_mdp_t;
 
 
 typedef struct
 {
     gchar *name;  /* nom */
-    guint refs;   /* Nombre de références au nom */
+    guint refs;   /* Nombre de rÃ©fÃ©rences au nom */
 } hashset_t;
 
 
@@ -84,7 +84,7 @@ typedef struct
  */
 typedef struct
 {
-    gint64 position; /* indique le numéro de chunk dans le fichier (soit sa position) */
+    gint64 position; /* indique le numÃ©ro de chunk dans le fichier (soit sa position) */
                      /* -1 = tout le fichier */
 
     guchar *hash_md5;     /* le md5 du chunk                                           */
@@ -99,20 +99,20 @@ typedef struct
 
 
 /**
- *  Structures de stockage des hashs issus des différents fichiers
+ *  Structures de stockage des hashs issus des diffÃ©rents fichiers
  *  composant le hashset
- *  file_hash_t : pour un seul fichier (utilisé dans une liste pour éviter les collisions)
- *  arbre_t : arbre pour gérer l'ensemble des hash et faire tomber le
+ *  file_hash_t : pour un seul fichier (utilisÃ© dans une liste pour Ã©viter les collisions)
+ *  arbre_t : arbre pour gÃ©rer l'ensemble des hash et faire tomber le
  *            nombre de comparaisons (n branches soit 16^n listes)
  *  hash_t : Super-structure permettant une simplification des appels
  *           de fonctions
  */
 typedef struct
 {
-    hashset_t *hashset;   /* l'éventuel nom du hashset dans lequel est situé le fichier */
+    hashset_t *hashset;   /* l'Ã©ventuel nom du hashset dans lequel est situÃ© le fichier */
     gchar *filename;      /* Le nom du fichier                                          */
 
-    chunk_t *file_hashs;  /* les hashs du fichier (dans sa totalité)                    */
+    chunk_t *file_hashs;  /* les hashs du fichier (dans sa totalitÃ©)                    */
 
     /* guchar *hash_md5;      le md5 du fichier                                          */
     /* guint  len_md5;        longueur du md5                                            */
@@ -129,15 +129,15 @@ typedef struct
 
 
 /**
- *  Structure utilisée pour les résultats de la comparaison
+ *  Structure utilisÃ©e pour les rÃ©sultats de la comparaison
  */
 typedef struct
 {
-    gchar *hashset_name;          /* Le nom du hashset dans lequel on a trouvé un md5 identique */
+    gchar *hashset_name;          /* Le nom du hashset dans lequel on a trouvÃ© un md5 identique */
     gchar *hashset_file_filename; /* le nom du fichier correspondant dans le hashset            */
-    gchar *filename;              /* Le nom du fichier original comparé aux hashsets            */
+    gchar *filename;              /* Le nom du fichier original comparÃ© aux hashsets            */
 
-    chunk_t *file_hashs;          /* les hashs du fichier (dans sa totalité)                    */
+    chunk_t *file_hashs;          /* les hashs du fichier (dans sa totalitÃ©)                    */
 
     /* guchar *hash_md5;              le md5 du fichier original (et de celui du hashset)        */
     /* guint  len_md5;                longueur du md5                                            */
@@ -151,7 +151,7 @@ typedef struct
 typedef struct
 {
     void *array[16]; /* un tableau d'indirections 0 -> 9 + a -> f qui pointe soit sur un structure arbre_t soit sur une liste de compte_t  */
-    guint niveau;    /* un indicateur du niveau dans lequel on se trouve (généralement entre 1 et 3)                                       */
+    guint niveau;    /* un indicateur du niveau dans lequel on se trouve (gÃ©nÃ©ralement entre 1 et 3)                                       */
 } arbre_t;
 
 
@@ -173,18 +173,18 @@ typedef struct
     guint64 value_file;        /* current value for the file progress bar                              */
     GtkProgressBar *pb_global; /* la barre de progression principale                                   */
     GtkProgressBar *pb_file;   /* la barre de progression secondaire                                   */
-    GtkLabel *pb_label;        /* le label situé juste au dessus de la barre de progression principale */
+    GtkLabel *pb_label;        /* le label situÃ© juste au dessus de la barre de progression principale */
 } p_bar_t;
 
 
 /**
- * Structure pour la gestion des paramètres lors de la lecture des données
+ * Structure pour la gestion des paramÃ¨tres lors de la lecture des donnÃ©es
  */
 typedef struct
 {
     GSList *file_hash_list;  /* la liste des fichiers et leurs hashs                       */
     gchar *filename;         /* Le nom du fichier en cours                                 */
-    int lus;                 /* Nombre d'octets dans le buffer (en général = à len_buf)    */
+    int lus;                 /* Nombre d'octets dans le buffer (en gÃ©nÃ©ral = Ã  len_buf)    */
     file_hash_t *file_hash;  /* le fichier en cours, notamment lorsqu'il s'agit d'un chunk */
 } compute_block_t;
 
@@ -194,13 +194,13 @@ typedef struct
  */
 typedef struct
 {
-    gboolean include_dir;  /* indique si l'on doit inclure le répertoire dans le nom du fichier dans file_hash_t  */
-    gboolean all_known;    /* indique si l'on doit inclure tous les noms des hashset où le fichier apparaît       */
-    gboolean include_hashset_name; /* indique si l'on doit inclure le nom du hashset où est connu le hash cherché */
-    gboolean include_hashset_file_filename; /* idem mais avec le nom du fichier du hashset où le hash est connu   */
-    gboolean genere_hashs_vides;  /* Pour la génération des hashs de fichiers vides (par défaut == FALSE)         */
+    gboolean include_dir;  /* indique si l'on doit inclure le rÃ©pertoire dans le nom du fichier dans file_hash_t  */
+    gboolean all_known;    /* indique si l'on doit inclure tous les noms des hashset oÃ¹ le fichier apparaÃ®t       */
+    gboolean include_hashset_name; /* indique si l'on doit inclure le nom du hashset oÃ¹ est connu le hash cherchÃ© */
+    gboolean include_hashset_file_filename; /* idem mais avec le nom du fichier du hashset oÃ¹ le hash est connu   */
+    gboolean genere_hashs_vides;  /* Pour la gÃ©nÃ©ration des hashs de fichiers vides (par dÃ©faut == FALSE)         */
     gboolean charger_fv_hashsets; /* Charge les hashs des fichiers vides contenus dans les hashsets               */
-    guint nb_indirections; /* Nombre d'indirections pour la structure (de 2 à 5)                                  */
+    guint nb_indirections; /* Nombre d'indirections pour la structure (de 2 Ã  5)                                  */
     guint hash_type;       /* Indique le type de hash : GCH_HASH_MD5 GCH_HASH_SHA1 GCH_HASH_RIPEMD160             */
 } options_t;
 
@@ -216,22 +216,22 @@ typedef struct
 
 
 /**
- *  Structure pour la gestion des résultats des comparaisons
+ *  Structure pour la gestion des rÃ©sultats des comparaisons
  *  Attention :
  *   - found est de type result_hash_t *
  *   - not_found est de type file_hash_t *
  */
 typedef struct
 {
-    GSList *found;      /* les hashs de la liste qui sont présent dans le hashset ; result_hash_t *  */
+    GSList *found;      /* les hashs de la liste qui sont prÃ©sent dans le hashset ; result_hash_t *  */
     GSList *not_found;  /* les hashs de la liste qui ne sont PAS dans le hashset  ; file_hash_t *    */
 } found_or_not_t;
 
 
 /**
  *  Structure permettant de retourner le nombre d'octets
- *  non compressés traités ainsi que le nombre d'octets
- *  compressés que cela représente ainsi que le nombre
+ *  non compressÃ©s traitÃ©s ainsi que le nombre d'octets
+ *  compressÃ©s que cela reprÃ©sente ainsi que le nombre
  *  de hashs
  */
 typedef struct
@@ -247,13 +247,13 @@ typedef struct
  */
 typedef struct
 {
-    GladeXML *xml;          /* la définition XML de l'interface glade                               */
-    GList *location_list;   /* la liste des localisation où l'on peut trouver les fichiers de conf  */
+    GladeXML *xml;          /* la dÃ©finition XML de l'interface glade                               */
+    GList *location_list;   /* la liste des localisation oÃ¹ l'on peut trouver les fichiers de conf  */
     log_t *log;             /* pour pouvoir logguer les messages                                    */
-    p_bar_t *pb;            /* pour la gestion de la fenêtre de progression                         */
-    GSList *file_hash_list; /* Liste des fichiers hashé (d'un répertoire)                           */
-    options_t *opts;        /* Options ou préférences                                               */
-    hash_t *tronc;          /* Le tronc où l'on va stocker le hashset                               */
+    p_bar_t *pb;            /* pour la gestion de la fenÃªtre de progression                         */
+    GSList *file_hash_list; /* Liste des fichiers hashÃ© (d'un rÃ©pertoire)                           */
+    options_t *opts;        /* Options ou prÃ©fÃ©rences                                               */
+    hash_t *tronc;          /* Le tronc oÃ¹ l'on va stocker le hashset                               */
     found_or_not_t *dedans_ou_pas; /* dans le hashset ou pas.                                       */
 } main_struct_t;
 

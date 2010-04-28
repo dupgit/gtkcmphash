@@ -69,10 +69,10 @@ guint64 file_size(gchar *filename)
 }
 
 /**
- * @param *buffer : le buffer o˘ les donnÈes du fichiers ont ÈtÈ chargÈes
- * @param lus : la taille de ce qui a ÈtÈ lus (la taille du buffer)
- * @param position : un guint64 qui est augmentÈ de 1 tous les 512 octets traitÈs
- * @param chunk_hashs : la liste o˘ l'on stocke tous les hashs issus des buffers
+ * @param *buffer : le buffer o√π les donn√©es du fichiers ont √©t√© charg√©es
+ * @param lus : la taille de ce qui a √©t√© lus (la taille du buffer)
+ * @param position : un guint64 qui est augment√© de 1 tous les 512 octets trait√©s
+ * @param chunk_hashs : la liste o√π l'on stocke tous les hashs issus des buffers
  */
 static GSList *do_chunks_from_buffer(guchar *buffer, size_t lus, guint64 *position, GSList *chunk_hashs)
 {
@@ -89,7 +89,7 @@ static GSList *do_chunks_from_buffer(guchar *buffer, size_t lus, guint64 *positi
     chunk_t *a_chunk_hash = NULL;
     guchar *chunk_buffer = buffer;
 
-    /* traitement de 512 octets dans l'incrÈment d'une boucle */
+    /* traitement de 512 octets dans l'incr√©ment d'une boucle */
     while (lus > 0)
         {
             a_chunk_hash = (chunk_t *) g_malloc0(sizeof(chunk_t));
@@ -148,7 +148,7 @@ static GSList *do_chunks_from_buffer(guchar *buffer, size_t lus, guint64 *positi
 
 
 /**
- *  Produit les hashs d'un fichier donnÈ (filename)
+ *  Produit les hashs d'un fichier donn√© (filename)
  *  MD5, SHA1 et RIPEMD160 en une seule passe
  */
 file_hash_t *hash_a_file(p_bar_t *pb, gchar *filename)
@@ -254,10 +254,10 @@ file_hash_t *hash_a_file(p_bar_t *pb, gchar *filename)
 
 
 /**
- *  Traverse l'intÈgralitÈ d'un dossier
- *  rÈcursivement. Rempli la liste file_liste
- *  avec les noms des fichiers trouvÈs
- *  Avant d'appeler la fonction il faut Ítre certain d'avoir initialisÈ
+ *  Traverse l'int√©gralit√© d'un dossier
+ *  r√©cursivement. Rempli la liste file_liste
+ *  avec les noms des fichiers trouv√©s
+ *  Avant d'appeler la fonction il faut √™tre certain d'avoir initialis√©
  *  la barre de progression
  */
 GSList *traverse_un_dossier(p_bar_t *pb, gchar *dirname, GSList *file_list)
@@ -306,13 +306,13 @@ GSList *traverse_un_dossier(p_bar_t *pb, gchar *dirname, GSList *file_list)
 
 /**
  *  Traverse un dossier pour en hasher le contenu
- *  Retourne une liste de fichiers hashÈs (liste de file_hash_t)
+ *  Retourne une liste de fichiers hash√©s (liste de file_hash_t)
  */
 GSList *hash_a_directory(main_struct_t *main_struct, gchar *dirname)
 {
     GSList *file_list = NULL;
     GSList *head = NULL;
-    GSList *file_hash_list = main_struct->file_hash_list; /* Ce qui permet de hacher plusieurs rÈpertoires */
+    GSList *file_hash_list = main_struct->file_hash_list; /* Ce qui permet de hacher plusieurs r√©pertoires */
     file_hash_t *file_hash = NULL;
     p_bar_t *pb = NULL;
     gchar *new_filename = NULL;
@@ -323,7 +323,7 @@ GSList *hash_a_directory(main_struct_t *main_struct, gchar *dirname)
     init_progress_window(main_struct);
     pb = init_progress_bar(main_struct->pb, 0, 0);  /* pulse mode */
 
-    /* rÈcupÈration de la liste des fichiers ‡ hacher */
+    /* r√©cup√©ration de la liste des fichiers √† hacher */
     file_list = traverse_un_dossier(pb, dirname, file_list);
     head = file_list;
 
@@ -347,7 +347,7 @@ GSList *hash_a_directory(main_struct_t *main_struct, gchar *dirname)
 
                     if (main_struct->opts->genere_hashs_vides == TRUE)
                         {
-                            /* On intÈgre le hash dans la liste, quel qu'il soit */
+                            /* On int√©gre le hash dans la liste, quel qu'il soit */
                             file_hash_list = g_slist_prepend(file_hash_list, file_hash);
                             integres++;
                         }
@@ -369,23 +369,23 @@ GSList *hash_a_directory(main_struct_t *main_struct, gchar *dirname)
             file_list = g_slist_next(file_list);
 
             /* Refreshing the progress bar */
-            pb->value++;  /* TODO : ecrire une fonction pour Áa */
+            pb->value++;  /* TODO : ecrire une fonction pour √ßa */
             refresh_progress_bar(pb);
         }
 
     /* Ending things with the progress bar window */
     end_progress_window(main_struct);
 
-    ldt_log_message(main_struct->log, G_LOG_LEVEL_INFO, "RÈpertoire %s hachÈ : %Ld fichier(s) et %Ld hash(s) intÈgrÈs", dirname, max, integres);
+    ldt_log_message(main_struct->log, G_LOG_LEVEL_INFO, "R√©pertoire %s hach√© : %Ld fichier(s) et %Ld hash(s) int√©gr√©s", dirname, max, integres);
     g_slist_free(head);
 
     return file_hash_list;
 }
 
 /**
- *  Prepare et retourne la chaine de caractËre ‡ inscrire dans le
+ *  Prepare et retourne la chaine de caract√®re √† inscrire dans le
  *  fichier
- *  Quand save_hashset est ‡ TRUE c'est qu'on sauvegarde la liste
+ *  Quand save_hashset est √† TRUE c'est qu'on sauvegarde la liste
  *  des fichiers connus sinon, c'est soit la liste des hashs, soit
  *  la liste des fichiers inconnus
  */
@@ -477,12 +477,12 @@ static gchar *prepare_le_buffer(void *hash, gboolean save_hashset, options_t *op
 /**
  *  Sauvegarde les hashs. Format du fichier :
  *  nom_du_fichier md5 sha1 ripemd160
- *  sÈparÈs par une tabulation et terminÈ par un caractËre \n
+ *  s√©par√©s par une tabulation et termin√© par un caract√®re \n
  *  Limitation : un fichier ne doit pas avoir de tabulation
- *               ni le caractËre \n dans son nom.
- *  Lors de la sauvegarde du rÈsultat de la comparaison, on aimerai
+ *               ni le caract√®re \n dans son nom.
+ *  Lors de la sauvegarde du r√©sultat de la comparaison, on aimerai
  *  notamment savoir de quel hashset ils sont issus. Donc lorsque
- *  save_hashset == TRUE on sauvegarde, en dÈbut de ligne le nom du hashset et
+ *  save_hashset == TRUE on sauvegarde, en d√©but de ligne le nom du hashset et
  *                       le nom du fichier
  */
 bzip2_result_t *save_the_file_hash_list(GSList *file_hash_list, gchar *filename, gboolean save_hashset, options_t *opts)
@@ -533,7 +533,7 @@ bzip2_result_t *save_the_file_hash_list(GSList *file_hash_list, gchar *filename,
 
 /**
  *  Sauvegarde l'arbre en entier
- *  TODO : libÈrer de la mÈmoire la liste !!
+ *  TODO : lib√©rer de la m√©moire la liste !!
  */
 bzip2_result_t *save_the_hashsets(main_struct_t *main_struct, gchar *filename)
 {
@@ -554,7 +554,7 @@ static file_hash_t *new_from_buffer_line(gchar *buf, int lus, guint n, hashset_t
     file_hash_t *file_hash = NULL;
 
     guint j = 0;  /* position des \t dans la chaine            */
-    guint l = 0;  /* position des \t prÈcÈdente dans la chaine */
+    guint l = 0;  /* position des \t pr√©c√©dente dans la chaine */
     guchar *md5 = NULL;
     guchar *sha1 = NULL;
     guchar *ripemd = NULL;
@@ -567,7 +567,7 @@ static file_hash_t *new_from_buffer_line(gchar *buf, int lus, guint n, hashset_t
 
     file_hash->hashset = hashset;
 
-    /* rÈcupÈration du nom de fichier */
+    /* r√©cup√©ration du nom de fichier */
     j = 0;
     while (buf[n+j] != '\t' && n+j <lus)
         {
@@ -578,7 +578,7 @@ static file_hash_t *new_from_buffer_line(gchar *buf, int lus, guint n, hashset_t
     filename[j] = (gchar) 0;
     file_hash->filename = filename;
 
-    /* RÈcupÈration de la position */
+    /* R√©cup√©ration de la position */
     l = j+1;
     j = 0;
     while (buf[n+l+j] != '\t' && n+l+j <lus)
@@ -592,7 +592,7 @@ static file_hash_t *new_from_buffer_line(gchar *buf, int lus, guint n, hashset_t
     file_hash->file_hashs->position = (gint64) pos;
     g_free(str_pos);
 
-    /* rÈcupÈration du md5 */
+    /* r√©cup√©ration du md5 */
     l += j+1;
     j = 0;
     while (buf[n+l+j] != '\t' && n+l+j <lus)
@@ -606,7 +606,7 @@ static file_hash_t *new_from_buffer_line(gchar *buf, int lus, guint n, hashset_t
     file_hash->file_hashs->len_md5 = j/2;
     g_free(md5);
 
-    /* rÈcupÈration du sha1 */
+    /* r√©cup√©ration du sha1 */
     l += j+1;
     j = 0;
     while (buf[n+l+j] != '\t' && n+l+j <lus)
@@ -620,7 +620,7 @@ static file_hash_t *new_from_buffer_line(gchar *buf, int lus, guint n, hashset_t
     file_hash->file_hashs->len_sha1 = j/2;
     g_free(sha1);
 
-    /* rÈcupÈration du ripemd */
+    /* r√©cup√©ration du ripemd */
     l += j+1;
     j = 0;
     while (buf[n+l+j] != '\n' && n+l+j <lus)
@@ -645,7 +645,7 @@ static chunk_t *new_chunk_from_buffer_line(gchar *buf, int lus, guint n)
     chunk_t *chunk_hash = NULL;
 
     guint j = 0;  /* position des \t dans la chaine            */
-    guint l = 0;  /* position des \t prÈcÈdente dans la chaine */
+    guint l = 0;  /* position des \t pr√©c√©dente dans la chaine */
     guchar *md5 = NULL;
     guchar *sha1 = NULL;
     guchar *ripemd = NULL;
@@ -654,7 +654,7 @@ static chunk_t *new_chunk_from_buffer_line(gchar *buf, int lus, guint n)
 
     chunk_hash = (chunk_t *) g_malloc0(sizeof(chunk_t));
 
-    /* rÈcupÈration du nom de fichier */
+    /* r√©cup√©ration du nom de fichier */
     j = 0;
     while (buf[n+j] != '\t' && n+j <lus)
         {
@@ -662,7 +662,7 @@ static chunk_t *new_chunk_from_buffer_line(gchar *buf, int lus, guint n)
         }
     /* On s'en fiche, on ne la garde pas ! */
 
-    /* RÈcupÈration de la position */
+    /* R√©cup√©ration de la position */
     l = j+1;
     j = 0;
     while (buf[n+l+j] != '\t' && n+l+j <lus)
@@ -676,7 +676,7 @@ static chunk_t *new_chunk_from_buffer_line(gchar *buf, int lus, guint n)
     chunk_hash->position = (gint64) pos;
     g_free(str_pos);
 
-    /* rÈcupÈration du md5 */
+    /* r√©cup√©ration du md5 */
     l += j+1;
     j = 0;
     while (buf[n+l+j] != '\t' && n+l+j <lus)
@@ -690,7 +690,7 @@ static chunk_t *new_chunk_from_buffer_line(gchar *buf, int lus, guint n)
     chunk_hash->len_md5 = j/2;
     g_free(md5);
 
-    /* rÈcupÈration du sha1 */
+    /* r√©cup√©ration du sha1 */
     l += j+1;
     j = 0;
     while (buf[n+l+j] != '\t' && n+l+j <lus)
@@ -704,7 +704,7 @@ static chunk_t *new_chunk_from_buffer_line(gchar *buf, int lus, guint n)
     chunk_hash->len_sha1 = j/2;
     g_free(sha1);
 
-    /* rÈcupÈration du ripemd */
+    /* r√©cup√©ration du ripemd */
     l += j+1;
     j = 0;
     while (buf[n+l+j] != '\n' && n+l+j <lus)
@@ -752,13 +752,13 @@ static void add_file_hash_to_list(compute_block_t *cb, hashset_t *hashset, bzip2
 
 
 /**
- *  Ajoute dans la liste file_hash_list les ÈlÈments
+ *  Ajoute dans la liste file_hash_list les √©l√©ments
  *  contenus dans un bloc de buffer "buf"
- *  retourne le premier caractËre d'une chaine non entiËre
+ *  retourne le premier caract√®re d'une chaine non enti√®re
  */
 static int compute_one_block(compute_block_t *cb, gchar *buf, hashset_t *hashset, bzip2_result_t *compte, options_t *opts)
 {
-    guint n = 0;   /* position du dÈbut de la chaine    */
+    guint n = 0;   /* position du d√©but de la chaine    */
     guint i = 0;   /* position de la fin de la chaine   */
     guint len = 0; /* longeur de la chaine lue          */
     chunk_t *a_chunk = NULL;
@@ -766,13 +766,13 @@ static int compute_one_block(compute_block_t *cb, gchar *buf, hashset_t *hashset
 
     while (n+i < cb->lus-1) /* < */
         {
-            /* recherche de la fin de la premiËre ligne (TODO : dÈtecter un \n dans un nom de fichier) */
+            /* recherche de la fin de la premi√®re ligne (TODO : d√©tecter un \n dans un nom de fichier) */
             while (buf[n+i] != '\n' && n+i < cb->lus-1)  /* < */
                 {
                     i++;
                 }
 
-            if (buf[n+i] == '\n' && n+i <= cb->lus-1)  /* Si on est arrivÈ avant la fin du bloc */
+            if (buf[n+i] == '\n' && n+i <= cb->lus-1)  /* Si on est arriv√© avant la fin du bloc */
                 {
                     temp_file_hash = new_from_buffer_line(buf, cb->lus, n, hashset); /* lecture d'une ligne */
                     n += i+1;
@@ -781,15 +781,15 @@ static int compute_one_block(compute_block_t *cb, gchar *buf, hashset_t *hashset
 
                     if (cb->filename != NULL) /* on est en train de charger des fichiers */
                         {
-                            if (g_ascii_strcasecmp(cb->filename, temp_file_hash->filename) == 0) /* les chaines sont Ègales ? */
-                                { /* On est dans le cas o˘ on ajoute les chunks (les hashs des blocs de 512 octets des fichiers */
+                            if (g_ascii_strcasecmp(cb->filename, temp_file_hash->filename) == 0) /* les chaines sont √©gales ? */
+                                { /* On est dans le cas o√π on ajoute les chunks (les hashs des blocs de 512 octets des fichiers */
                                     a_chunk = temp_file_hash->file_hashs;
-                                    g_free(temp_file_hash->filename);      /* on peut virer la rÈfÈrence */
+                                    g_free(temp_file_hash->filename);      /* on peut virer la r√©f√©rence */
 
                                     cb->file_hash->chunk_hashs = g_slist_prepend(cb->file_hash->chunk_hashs, a_chunk); /* Ajout du chunk */
                                     compte->nb_hash++;
                                 }
-                            else  /* On attaque un nouveau fichier et donc on doit prÈparer les chunks */
+                            else  /* On attaque un nouveau fichier et donc on doit pr√©parer les chunks */
                                 {
                                     g_free(cb->filename);
                                     cb->filename = g_strdup(temp_file_hash->filename);
@@ -806,7 +806,7 @@ static int compute_one_block(compute_block_t *cb, gchar *buf, hashset_t *hashset
                             cb->file_hash = temp_file_hash;
                             cb->file_hash->chunk_hashs = NULL;
 
-                            /* insertion dans la liste des fichiers qui sera retournÈe */
+                            /* insertion dans la liste des fichiers qui sera retourn√©e */
 
                             add_file_hash_to_list(cb, hashset, compte, opts);
                         }
@@ -826,7 +826,7 @@ static int compute_one_block(compute_block_t *cb, gchar *buf, hashset_t *hashset
 
 /**
  *  Extrait dirname de filename pour retourner uniquement la
- *  partie basse (relative ‡ dirname)
+ *  partie basse (relative √† dirname)
  */
 static gchar *make_relative_filename_from_dir(gchar *dirname, gchar *filename)
 {
@@ -865,8 +865,8 @@ GSList *load_one_file(main_struct_t *main_struct, gchar* dirname, gchar *filenam
     BZFILE *compressed = NULL;
     gchar *buf = NULL;
     guint buf_len = FILE_IO_BUFFER_SIZE;
-    int faits = 0; /* pour dÈtecter les effets de bords */
-    int deja_lus = 0; /* les octets du buffer prÈcÈdent */
+    int faits = 0; /* pour d√©tecter les effets de bords */
+    int deja_lus = 0; /* les octets du buffer pr√©c√©dent */
     hashset_t *hashset = NULL;
     gboolean stop = FALSE;
     p_bar_t *pb = main_struct->pb;
@@ -953,9 +953,9 @@ GSList *load_one_file(main_struct_t *main_struct, gchar* dirname, gchar *filenam
             BZ2_bzReadClose(&bzerror, compressed);
 
             fclose(fp);
-            ldt_log_message(main_struct->log, G_LOG_LEVEL_INFO, "Hashset %s intÈgrÈ (%d hashs)", hashset->name, compte->nb_hash);
+            ldt_log_message(main_struct->log, G_LOG_LEVEL_INFO, "Hashset %s int√©gr√© (%d hashs)", hashset->name, compte->nb_hash);
 
-            /* on ne libËre pas hashset car il est intÈgrÈ dans la structure file_hash_list ! */
+            /* on ne lib√®re pas hashset car il est int√©gr√© dans la structure file_hash_list ! */
         }
 
     g_free(buf);
@@ -966,19 +966,19 @@ GSList *load_one_file(main_struct_t *main_struct, gchar* dirname, gchar *filenam
 
 /**
  *  Charge un hashset : un ensemble de fichiers bzip2 contenus
- *  dans un rÈpertoire (et ses sous rÈpertoires)
- *  Chaque fichier est considÈrÈ comme un hashset
+ *  dans un r√©pertoire (et ses sous r√©pertoires)
+ *  Chaque fichier est consid√©r√© comme un hashset
  */
 void load_a_complete_directory(main_struct_t *main_struct, gchar *dirname)
 {
     GSList *file_list = NULL;
     GSList *head = NULL;
-    guint64 max = 0;                 /* Nombre de fichiers ‡ charger */
-    guint64 total = 0;               /* Nombre total de hashs chargÈs */
+    guint64 max = 0;                 /* Nombre de fichiers √† charger */
+    guint64 total = 0;               /* Nombre total de hashs charg√©s */
     GSList *file_hash_list = NULL;
     gchar *filename = NULL;
     p_bar_t *pb = NULL;
-    bzip2_result_t *compte = NULL; /* pour Èviter deux appels couteux ‡ g_slist_length(file_hash_list) */
+    bzip2_result_t *compte = NULL; /* pour √©viter deux appels couteux √† g_slist_length(file_hash_list) */
 
     compte = (bzip2_result_t *) g_malloc0(sizeof(bzip2_result_t));
     compte->nb_hash = 0;
@@ -989,7 +989,7 @@ void load_a_complete_directory(main_struct_t *main_struct, gchar *dirname)
     init_progress_window(main_struct);
     pb = init_progress_bar(main_struct->pb, 0, 0);  /* pulse mode */
 
-    /* rÈcupÈration de la liste des fichiers ‡ charger */
+    /* r√©cup√©ration de la liste des fichiers √† charger */
     file_list = traverse_un_dossier(pb, dirname, file_list);
     head = file_list;
 
@@ -1001,13 +1001,13 @@ void load_a_complete_directory(main_struct_t *main_struct, gchar *dirname)
         main_struct->opts->nb_indirections >= GCH_NB_INDIRECT_MIN &&
         main_struct->opts->nb_indirections <= GCH_NB_INDIRECT_MAX)
         {
-            ldt_log_message(main_struct->log, G_LOG_LEVEL_INFO, "CrÈation de la structure avec %d niveaux", main_struct->opts->nb_indirections);
+            ldt_log_message(main_struct->log, G_LOG_LEVEL_INFO, "Cr√©ation de la structure avec %d niveaux", main_struct->opts->nb_indirections);
             main_struct->tronc = nouveau_tronc(main_struct->opts->nb_indirections); /* n niveaux d'indirection -> 256^(n-1) listes !*/
         }
     else if (main_struct->tronc == NULL)
         {
-            ldt_log_message(main_struct->log, G_LOG_LEVEL_INFO, "CrÈation de la structure avec %d niveaux", GCH_NB_INDIRECT);
-            main_struct->tronc = nouveau_tronc(GCH_NB_INDIRECT); /* valeur par dÈfaut */
+            ldt_log_message(main_struct->log, G_LOG_LEVEL_INFO, "Cr√©ation de la structure avec %d niveaux", GCH_NB_INDIRECT);
+            main_struct->tronc = nouveau_tronc(GCH_NB_INDIRECT); /* valeur par d√©faut */
         }
 
     while (file_list != NULL)
@@ -1036,9 +1036,9 @@ void load_a_complete_directory(main_struct_t *main_struct, gchar *dirname)
     /* Ending things with the progress bar window */
     end_progress_window(main_struct);
 
-    ldt_log_message(main_struct->log, G_LOG_LEVEL_INFO, "%Ld fichier(s) intÈgrÈ(s) soit %Ld hashs", max, total);
+    ldt_log_message(main_struct->log, G_LOG_LEVEL_INFO, "%Ld fichier(s) int√©gr√©(s) soit %Ld hashs", max, total);
 
-    /* LibÈration de mÈmoire */
-    g_slist_free(head); /* Ici Áa peut prendre du temps */
+    /* Lib√©ration de m√©moire */
+    g_slist_free(head); /* Ici √ßa peut prendre du temps */
     g_free(compte);
 }

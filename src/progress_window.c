@@ -44,8 +44,8 @@ static p_bar_t *set_progress_bar_values(p_bar_t *pb, GtkProgressBar *pb_global, 
 }
 
 /**
- *  Créer la structure pour la barre de progression
- *  Détruite dans la fin de la fenêtre
+ *  CrÃ©er la structure pour la barre de progression
+ *  DÃ©truite dans la fin de la fenÃªtre
  */
 static p_bar_t *new_progress_bar_struct(GtkProgressBar *pb_global, GtkProgressBar *pb_file, GtkLabel *pb_label)
 {
@@ -60,7 +60,7 @@ static p_bar_t *new_progress_bar_struct(GtkProgressBar *pb_global, GtkProgressBa
 
 
 /**
- *  Gère l'affichage de la barre de progression
+ *  GÃ¨re l'affichage de la barre de progression
  */
 void refresh_progress_bar(p_bar_t *pb)
 {
@@ -89,7 +89,7 @@ void refresh_progress_bar(p_bar_t *pb)
 }
 
 /**
- *  Ne rafraîchit que la barre de progression secondaire
+ *  Ne rafraÃ®chit que la barre de progression secondaire
  */
 void refresh_file_progress_bar(p_bar_t *pb)
 {
@@ -115,8 +115,8 @@ void refresh_file_progress_bar(p_bar_t *pb)
 
 /**
  *  Fonction permettant de faire aller et venir la barre de
- *  progression (car on ne connait pas à l'avance le nombre
- *  de choses a réaliser)
+ *  progression (car on ne connait pas Ã  l'avance le nombre
+ *  de choses a rÃ©aliser)
  */
 void pulse_the_progress_bar(p_bar_t *pb)
 {
@@ -167,7 +167,7 @@ p_bar_t *init_progress_bar(p_bar_t *pb, guint64 max, guint64 max_file)
 
 
 /**
- *  fermeture de la fenêtre de la barre de progression : on ne veux pas !
+ *  fermeture de la fenÃªtre de la barre de progression : on ne veux pas !
  */
 static gboolean delete_pb_window_event(GtkWidget *widget, GdkEvent  *event, gpointer data )
 {
@@ -176,7 +176,7 @@ static gboolean delete_pb_window_event(GtkWidget *widget, GdkEvent  *event, gpoi
 
 
 /**
- *  destruction de la fenêtre principale : on ne veux pas !
+ *  destruction de la fenÃªtre principale : on ne veux pas !
  */
 static void destroy_pb_window(GtkWidget *widget, gpointer data)
 {
@@ -185,7 +185,7 @@ static void destroy_pb_window(GtkWidget *widget, gpointer data)
 
 
 /**
- *  initialise la fenêtre de la barre de progression et gtk+
+ *  initialise la fenÃªtre de la barre de progression et gtk+
  */
 void init_progress_window(main_struct_t *main_struct)
 {
@@ -196,11 +196,11 @@ void init_progress_window(main_struct_t *main_struct)
 
     main_struct->pb = new_progress_bar_struct(pb_global, pb_file, pb_label);
 
-    /* Supression de la fenêtre */
+    /* Supression de la fenÃªtre */
     g_signal_connect(G_OBJECT(glade_xml_get_widget(main_struct->xml, "progress_window")), "delete-event",
                      G_CALLBACK(delete_pb_window_event), NULL);
 
-    /* Destruction de la fenêtre */
+    /* Destruction de la fenÃªtre */
     g_signal_connect(G_OBJECT(glade_xml_get_widget(main_struct->xml, "progress_window")), "destroy",
                      G_CALLBACK(destroy_pb_window), main_struct);
 
@@ -210,8 +210,8 @@ void init_progress_window(main_struct_t *main_struct)
 
 
 /**
- *  Remet la fenêtre de la barre de progression et gtk+
- *  dans un état "normal"
+ *  Remet la fenÃªtre de la barre de progression et gtk+
+ *  dans un Ã©tat "normal"
  */
 void end_progress_window(main_struct_t *main_struct)
 {

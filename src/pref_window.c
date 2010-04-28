@@ -29,7 +29,7 @@ static void connect_signaux_pref_window(main_struct_t *main_struct);
 
 
 /**
- *  Affiche ou cache la fenêtre des préférences (modale)
+ *  Affiche ou cache la fenÃªtre des prÃ©fÃ©rences (modale)
  */
 static void show_hide_pref_window(main_struct_t *main_struct, gboolean show)
 {
@@ -45,7 +45,7 @@ static void show_hide_pref_window(main_struct_t *main_struct, gboolean show)
 
 
 /**
- *  Pour afficher la fenêtre des préférences
+ *  Pour afficher la fenÃªtre des prÃ©fÃ©rences
  */
 void show_pref_window(GtkWidget *widget, gpointer data)
 {
@@ -56,7 +56,7 @@ void show_pref_window(GtkWidget *widget, gpointer data)
 
 
 /**
- *  Lorsqu'on clique sur le bouton "Fermer" de la fenêtre des préférences
+ *  Lorsqu'on clique sur le bouton "Fermer" de la fenÃªtre des prÃ©fÃ©rences
  */
 static void close_pref_window(GtkWidget *widget, gpointer data)
 {
@@ -79,7 +79,7 @@ static void toggle_include_dir(GtkWidget *widget, gpointer data)
 
 
 /**
- *  Pour inclure le nom du hashset dans les résultats des fihciers connus
+ *  Pour inclure le nom du hashset dans les rÃ©sultats des fihciers connus
  */
 static void toggle_include_hashset_name(GtkWidget *widget, gpointer data)
 {
@@ -91,7 +91,7 @@ static void toggle_include_hashset_name(GtkWidget *widget, gpointer data)
 
 
 /**
- *  Pour inclure le nom du fichier ayant le même hash que celui recherché
+ *  Pour inclure le nom du fichier ayant le mÃªme hash que celui recherchÃ©
  */
 static void toggle_include_hashset_file_filename(GtkWidget *widget, gpointer data)
 {
@@ -103,8 +103,8 @@ static void toggle_include_hashset_file_filename(GtkWidget *widget, gpointer dat
 
 
 /**
- *  Pour générer, ou non, les hashs des fichiers vides (de taille nulle)
- *  Par défaut on ne génère pas
+ *  Pour gÃ©nÃ©rer, ou non, les hashs des fichiers vides (de taille nulle)
+ *  Par dÃ©faut on ne gÃ©nÃ¨re pas
  */
 static void toggle_genere_hashs_vides(GtkWidget *widget, gpointer data)
 {
@@ -129,7 +129,7 @@ static void toggle_charger_fv_hashsets(GtkWidget *widget, gpointer data)
 
 
 /**
- *  Changement des résultats de comparaison
+ *  Changement des rÃ©sultats de comparaison
  */
 static void toggle_all_known(GtkWidget *widget, gpointer data)
 {
@@ -137,9 +137,9 @@ static void toggle_all_known(GtkWidget *widget, gpointer data)
     GtkToggleButton *cb_all_known = GTK_TOGGLE_BUTTON(glade_xml_get_widget(main_struct->xml, "cb_all_known"));
 
     /*
-      On doit supprimer les listes de comparaison, vu que la méthode est
-      différente. Pas besoin de tests sur la liste elle même vu que c'est
-      réalisé dans la fonction free_file_hash_list
+      On doit supprimer les listes de comparaison, vu que la mÃ©thode est
+      diffÃ©rente. Pas besoin de tests sur la liste elle mÃªme vu que c'est
+      rÃ©alisÃ© dans la fonction free_file_hash_list
     */
     free_dedans_ou_pas(main_struct);
 
@@ -170,10 +170,10 @@ static void value_changed_sp_nb_indirections(GtkWidget *widget, gpointer data)
 
 
 /**
- *  Option de changement du hash qui sert à la comparaison
- *  Cette fonction est appelée au moins 2 fois par clicks !
- *  Il doit y avoir une autre façon de connecter le signal
- *  adéquat...
+ *  Option de changement du hash qui sert Ã  la comparaison
+ *  Cette fonction est appelÃ©e au moins 2 fois par clicks !
+ *  Il doit y avoir une autre faÃ§on de connecter le signal
+ *  adÃ©quat...
  */
 static void rb_hash_toggled(GtkWidget *widget, gpointer data)
 {
@@ -193,7 +193,7 @@ static void rb_hash_toggled(GtkWidget *widget, gpointer data)
         {
             main_struct->opts->hash_type = GCH_HASH_RIPEMD160;
         }
-    else  /* cas par défaut */
+    else  /* cas par dÃ©faut */
         {
             main_struct->opts->hash_type = GCH_HASH_MD5;
         }
@@ -201,7 +201,7 @@ static void rb_hash_toggled(GtkWidget *widget, gpointer data)
 
 
 /**
- *  Connexion des signaux correspondant à la fenêtre des préférences
+ *  Connexion des signaux correspondant Ã  la fenÃªtre des prÃ©fÃ©rences
  */
 static void connect_signaux_pref_window(main_struct_t *main_struct)
 {
@@ -209,11 +209,11 @@ static void connect_signaux_pref_window(main_struct_t *main_struct)
     g_signal_connect(G_OBJECT(glade_xml_get_widget(main_struct->xml, "pw_quit")), "clicked",
                      G_CALLBACK(close_pref_window), main_struct);
 
-    /* Option d'inclusion des répertoires */
+    /* Option d'inclusion des rÃ©pertoires */
     g_signal_connect(G_OBJECT(glade_xml_get_widget(main_struct->xml, "cb_include_dir")), "toggled",
                      G_CALLBACK(toggle_include_dir), main_struct);
 
-    /* Option d'inclusion de tous les hashset_name dans lesquel apparait le fichier (forcément connu) */
+    /* Option d'inclusion de tous les hashset_name dans lesquel apparait le fichier (forcÃ©ment connu) */
     g_signal_connect(G_OBJECT(glade_xml_get_widget(main_struct->xml, "cb_all_known")), "toggled",
                      G_CALLBACK(toggle_all_known), main_struct);
 
@@ -252,7 +252,7 @@ static void connect_signaux_pref_window(main_struct_t *main_struct)
 
 
 /**
- *  Initialise la fenêtre de préférences avec les valeurs par défaut
+ *  Initialise la fenÃªtre de prÃ©fÃ©rences avec les valeurs par dÃ©faut
  *  Connecte les signaux
  */
 void init_pref_window_with_defaults(main_struct_t *main_struct)
