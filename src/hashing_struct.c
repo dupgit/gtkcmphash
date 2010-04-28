@@ -322,8 +322,9 @@ void insere_la_liste_dans_tronc(hash_t *tronc, GSList *file_hash_list, guint has
                     while (head)
                         {
                             tmp_file_hash->filename = g_strdup(file_hash->filename);
-                            tmp_file_hash->hashset = g_strdup(file_hash->hashset);
-                            tmp_file_hash->file_hash = (chunk_t *) file_hash->chunk_hashs->data;
+                            tmp_file_hash->hashset = file_hash->hashset;
+                            file_hash->hashset->refs += 1;
+                            tmp_file_hash->file_hashs = (chunk_t *) head->data;
 
                             insere_dans_tronc(tronc, tmp_file_hash, hash_type);
 
