@@ -307,6 +307,8 @@ void insere_dans_tronc(hash_t *tronc, file_hash_t *file_hash, guint hash_type)
 void insere_la_liste_dans_tronc(hash_t *tronc, GSList *file_hash_list, guint hash_type)
 {
     file_hash_t *file_hash = NULL;
+    file_hash_t *tmp_file_hash = NULL;
+    GSList *head = NULL;
 
     while (file_hash_list != NULL)
         {
@@ -315,6 +317,18 @@ void insere_la_liste_dans_tronc(hash_t *tronc, GSList *file_hash_list, guint has
             if (file_hash != NULL)
                 {
                     insere_dans_tronc(tronc, file_hash, hash_type);
+
+                    head = file_hash->chunk_hashs;
+                    while (head)
+                        {
+                            tmp_file_hash->filename = g_strdup(file_hash->filename);
+                            tmp_file_hash->hashset = g_strdup(file_hash->hashset);
+                            tmp_file_hash->file_hash = (chunk_t *) file_hash->chunk_hashs->data;
+
+                            insere_dans_tronc(tronc, tmp_file_hash, hash_type);
+
+                            head = g_slist_next(head);
+                        }
                 }
 
             file_hash_list = g_slist_next(file_hash_list);

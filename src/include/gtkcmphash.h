@@ -114,15 +114,6 @@ typedef struct
 
     chunk_t *file_hashs;  /* les hashs du fichier (dans sa totalité)                    */
 
-    /* guchar *hash_md5;      le md5 du fichier                                          */
-    /* guint  len_md5;        longueur du md5                                            */
-
-    /* guchar *hash_sha1;     le sha1 du fichier                                         */
-    /* guint  len_sha1;       longueur du sha1                                           */
-
-    /* guchar *hash_ripemd;   le ripemd160 du fichier                                    */
-    /* guint  len_ripemd;     longueur du ripemd160                                      */
-
     GSList *chunk_hashs;  /* la liste des hashs des chuncks de 512 octets du fichier    */
                           /* de type chunk_t                                            */
 } file_hash_t;
@@ -139,12 +130,6 @@ typedef struct
 
     chunk_t *file_hashs;          /* les hashs du fichier (dans sa totalité)                    */
 
-    /* guchar *hash_md5;              le md5 du fichier original (et de celui du hashset)        */
-    /* guint  len_md5;                longueur du md5                                            */
-    /* guchar *hash_sha1;             le sha1 du fichier                                         */
-    /* guint  len_sha1;               longueur du sha1                                           */
-    /* guchar *hash_ripemd;           le ripemd160 du fichier                                    */
-    /* guint  len_ripemd;             longueur du ripemd160                                      */
 } result_hash_t;
 
 

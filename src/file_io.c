@@ -3,7 +3,7 @@
    file_io.c
    Projet GtkCmpHash
 
-   (C) Copyright 2007 - 2008 Olivier Delhomme
+   (C) Copyright 2007 - 2010 Olivier Delhomme
    e-mail : olivierdelhomme@gmail.com
 
    This program is free software; you can redistribute it and/or modify
@@ -24,6 +24,7 @@
 #include "gtkcmphash.h"
 
 static file_hash_t *new_from_buffer_line(gchar *buf, int lus, guint n, hashset_t *hashset);
+static void add_file_hash_to_list(compute_block_t *cb, hashset_t *hashset, bzip2_result_t *compte, options_t *opts);
 static int compute_one_block(compute_block_t *cb, gchar *buf, hashset_t *hashset, bzip2_result_t *compte, options_t *opts);
 static gchar *make_relative_filename_from_dir(gchar *dirname, gchar *filename);
 static gchar *prepare_le_buffer(void *hash, gboolean save_hashset, options_t *opts);
@@ -637,91 +638,9 @@ static file_hash_t *new_from_buffer_line(gchar *buf, int lus, guint n, hashset_t
     return file_hash;
 }
 
-/**
- *  Rempli la structure chunk_t en lisant une seule ligne dans le buffer
- */
-static chunk_t *new_chunk_from_buffer_line(gchar *buf, int lus, guint n)
-{
-    chunk_t *chunk_hash = NULL;
-
-    guint j = 0;  /* position des \t dans la chaine            */
-    guint l = 0;  /* position des \t précédente dans la chaine */
-    guchar *md5 = NULL;
-    guchar *sha1 = NULL;
-    guchar *ripemd = NULL;
-    gchar *str_pos = NULL;
-    long long int pos = 0;
-
-    chunk_hash = (chunk_t *) g_malloc0(sizeof(chunk_t));
-
-    /* récupération du nom de fichier */
-    j = 0;
-    while (buf[n+j] != '\t' && n+j <lus)
-        {
-            j++;
-        }
-    /* On s'en fiche, on ne la garde pas ! */
-
-    /* Récupération de la position */
-    l = j+1;
-    j = 0;
-    while (buf[n+l+j] != '\t' && n+l+j <lus)
-        {
-            j++;
-        }
-    str_pos = (gchar *) g_malloc0(j+1);
-    memcpy(str_pos, buf+n+l, j);
-    str_pos[j] = (gchar) 0;
-    sscanf(str_pos, "%Ld", &pos);
-    chunk_hash->position = (gint64) pos;
-    g_free(str_pos);
-
-    /* récupération du md5 */
-    l += j+1;
-    j = 0;
-    while (buf[n+l+j] != '\t' && n+l+j <lus)
-        {
-            j++;
-        }
-    md5 = (guchar *) g_malloc0(j+1);
-    memcpy(md5, buf+n+l, j);
-    md5[j] = (guchar) 0;
-    chunk_hash->hash_md5 = transforme_le_hash_de_hex_en_binaire(md5);
-    chunk_hash->len_md5 = j/2;
-    g_free(md5);
-
-    /* récupération du sha1 */
-    l += j+1;
-    j = 0;
-    while (buf[n+l+j] != '\t' && n+l+j <lus)
-        {
-            j++;
-        }
-    sha1 = (guchar *) g_malloc0(j+1);
-    memcpy(sha1, buf+n+l, j);
-    sha1[j] = (guchar) 0;
-    chunk_hash->hash_sha1 = transforme_le_hash_de_hex_en_binaire(sha1);
-    chunk_hash->len_sha1 = j/2;
-    g_free(sha1);
-
-    /* récupération du ripemd */
-    l += j+1;
-    j = 0;
-    while (buf[n+l+j] != '\n' && n+l+j <lus)
-        {
-            j++;
-        }
-    ripemd = (guchar *) g_malloc0(j+1);
-    memcpy(ripemd, buf+n+l, j);
-    ripemd[j] = (guchar) 0;
-    chunk_hash->hash_ripemd = transforme_le_hash_de_hex_en_binaire(ripemd);
-    chunk_hash->len_ripemd = j/2;
-    g_free(ripemd);
-
-    return chunk_hash;
-}
 
 /**
+ * Ajoute un file_hash à la liste des file_hashs
  */
 static void add_file_hash_to_list(compute_block_t *cb, hashset_t *hashset, bzip2_result_t *compte, options_t *opts)
 {

@@ -3,7 +3,7 @@
    gtkcmphash.c
    Projet gtkcmphash
 
-   (C) Copyright 2007 - 2008 Olivier Delhomme
+   (C) Copyright 2007 - 2010 Olivier Delhomme
    e-mail : olivierdelhomme@gmail.com
 
    This program is free software; you can redistribute it and/or modify
@@ -546,9 +546,12 @@ static void menu_do_the_comparison(GtkWidget *widget, gpointer data)
                 {
                     free_dedans_ou_pas(main_struct);
                 }
+
             ldt_log_message(main_struct->log, G_LOG_LEVEL_INFO, "Début de la comparaison. Soyez patient !");
             log_comparison_type(main_struct);
+
             main_struct->dedans_ou_pas = find_all_hashes_from_hashset(main_struct->file_hash_list, main_struct->tronc, main_struct->opts);
+
             ldt_log_message(main_struct->log, G_LOG_LEVEL_INFO, "Fin de la comparaison");
         }
 }
