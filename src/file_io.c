@@ -758,8 +758,9 @@ static void add_file_hash_to_list(compute_block_t *cb, hashset_t *hashset, bzip2
  */
 static int compute_one_block(compute_block_t *cb, gchar *buf, hashset_t *hashset, bzip2_result_t *compte, options_t *opts)
 {
-    guint n = 0;  /* position du début de la chaine            */
-    guint i = 0;  /* position de la fin de la chaine           */
+    guint n = 0;   /* position du début de la chaine    */
+    guint i = 0;   /* position de la fin de la chaine   */
+    guint len = 0; /* longeur de la chaine lue          */
     chunk_t *a_chunk = NULL;
     file_hash_t *temp_file_hash = NULL;
 
@@ -771,25 +772,24 @@ static int compute_one_block(compute_block_t *cb, gchar *buf, hashset_t *hashset
                     i++;
                 }
 
-
             if (buf[n+i] == '\n' && n+i <= cb->lus-1)  /* Si on est arrivé avant la fin du bloc */
                 {
                     temp_file_hash = new_from_buffer_line(buf, cb->lus, n, hashset); /* lecture d'une ligne */
                     n += i+1;
+                    len = i;
                     i = 0;
 
                     if (cb->filename != NULL) /* on est en train de charger des fichiers */
                         {
-                            if (g_strcmp0(cb->filename, temp_file_hash->filename) == 0) /* les chaines sont égales ? */
-                                {
+                            if (g_ascii_strcasecmp(cb->filename, temp_file_hash->filename) == 0) /* les chaines sont égales ? */
+                                { /* On est dans le cas où on ajoute les chunks (les hashs des blocs de 512 octets des fichiers */
                                     a_chunk = temp_file_hash->file_hashs;
                                     g_free(temp_file_hash->filename);      /* on peut virer la référence */
 
                                     cb->file_hash->chunk_hashs = g_slist_prepend(cb->file_hash->chunk_hashs, a_chunk); /* Ajout du chunk */
                                     compte->nb_hash++;
-
                                 }
-                            else  /* On attaque un nouveau fichier */
+                            else  /* On attaque un nouveau fichier et donc on doit préparer les chunks */
                                 {
                                     g_free(cb->filename);
                                     cb->filename = g_strdup(temp_file_hash->filename);
@@ -798,16 +798,14 @@ static int compute_one_block(compute_block_t *cb, gchar *buf, hashset_t *hashset
                                     cb->file_hash->chunk_hashs = NULL;
 
                                     add_file_hash_to_list(cb, hashset, compte, opts);
-
                                 }
                         }
-                    else
+                    else  /* le cas d'initialisation */
                         {
                             cb->filename = g_strdup(temp_file_hash->filename);
                             cb->file_hash = temp_file_hash;
                             cb->file_hash->chunk_hashs = NULL;
 
-                            /* cb->file_hash = new_from_buffer_line(buf, cb->lus, n, hashset);  lecture d'une ligne */
                             /* insertion dans la liste des fichiers qui sera retournée */
 
                             add_file_hash_to_list(cb, hashset, compte, opts);

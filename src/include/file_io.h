@@ -26,7 +26,7 @@
 /**
  *  @def  FILE_IO_BUFFER_SIZE
  * defini la taille du buffer pour l'accès aux fichiers (doit absolument être
- * un multiple de 512 ! Ici : 64 secteurs de 512 octets soit 32768 octets.
+ * un multiple de 512 ! Ici : 64 secteurs de 512 octets soit 32768 octets).
  */
 #define FILE_IO_BUFFER_SIZE 512*64
 
