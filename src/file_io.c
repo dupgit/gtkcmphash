@@ -721,6 +721,35 @@ static chunk_t *new_chunk_from_buffer_line(gchar *buf, int lus, guint n)
     return chunk_hash;
 }
 
+/**
+ */
+static void add_file_hash_to_list(compute_block_t *cb, hashset_t *hashset, bzip2_result_t *compte, options_t *opts)
+{
+
+    if (opts->charger_fv_hashsets == TRUE)
+        {
+            /* On charge tous les hashs indistinctement */
+            cb->file_hash_list =  g_slist_prepend(cb->file_hash_list, cb->file_hash);
+            compte->nb_hash++;
+            hashset->refs++;
+        }
+    else
+        {
+            /* On ne charge que les hashs issus des fichiers non vides */
+            if (is_file_hash_empty(cb->file_hash) != TRUE)
+                {
+                    /* Si les hashs ne sont pas issus d'un fichier vide */
+                    cb->file_hash_list =  g_slist_prepend(cb->file_hash_list, cb->file_hash);
+                    compte->nb_hash++;
+                    hashset->refs++;
+                }
+            else
+                {
+                    free_file_hash(cb->file_hash);
+                }
+        }
+}
+
 
 /**
  *  Ajoute dans la liste file_hash_list les éléments
@@ -751,7 +780,7 @@ static int compute_one_block(compute_block_t *cb, gchar *buf, hashset_t *hashset
 
                     if (cb->filename != NULL) /* on est en train de charger des fichiers */
                         {
-                            if (g_strcmp0(cb->filename, temp_file_hash->filename) == 0) /* les chaines sont égales */
+                            if (g_strcmp0(cb->filename, temp_file_hash->filename) == 0) /* les chaines sont égales ? */
                                 {
                                     a_chunk = temp_file_hash->file_hashs;
                                     g_free(temp_file_hash->filename);      /* on peut virer la référence */
@@ -768,28 +797,7 @@ static int compute_one_block(compute_block_t *cb, gchar *buf, hashset_t *hashset
                                     cb->file_hash = temp_file_hash;
                                     cb->file_hash->chunk_hashs = NULL;
 
-                                    if (opts->charger_fv_hashsets == TRUE)
-                                        {
-                                            /* On charge tous les hashs indistinctement */
-                                            cb->file_hash_list =  g_slist_prepend(cb->file_hash_list, cb->file_hash);
-                                            compte->nb_hash++;
-                                            hashset->refs++;
-                                        }
-                                    else
-                                        {
-                                            /* On ne charge que les hashs issus des fichiers non vides */
-                                            if (is_file_hash_empty(cb->file_hash) != TRUE)
-                                                {
-                                                    /* Si les hashs ne sont pas issus d'un fichier vide */
-                                                    cb->file_hash_list =  g_slist_prepend(cb->file_hash_list, cb->file_hash);
-                                                    compte->nb_hash++;
-                                                    hashset->refs++;
-                                                }
-                                            else
-                                                {
-                                                    free_file_hash(cb->file_hash);
-                                                }
-                                        }
+                                    add_file_hash_to_list(cb, hashset, compte, opts);
 
                                 }
                         }
@@ -802,28 +810,7 @@ static int compute_one_block(compute_block_t *cb, gchar *buf, hashset_t *hashset
                             /* cb->file_hash = new_from_buffer_line(buf, cb->lus, n, hashset);  lecture d'une ligne */
                             /* insertion dans la liste des fichiers qui sera retournée */
 
-                            if (opts->charger_fv_hashsets == TRUE)
-                                {
-                                    /* On charge tous les hashs indistinctement */
-                                    cb->file_hash_list =  g_slist_prepend(cb->file_hash_list, cb->file_hash);
-                                    compte->nb_hash++;
-                                    hashset->refs++;
-                                }
-                            else
-                                {
-                                    /* On ne charge que les hashs issus des fichiers non vides */
-                                    if (is_file_hash_empty(cb->file_hash) != TRUE)
-                                        {
-                                            /* Si les hashs ne sont pas issus d'un fichier vide */
-                                            cb->file_hash_list =  g_slist_prepend(cb->file_hash_list, cb->file_hash);
-                                            compte->nb_hash++;
-                                            hashset->refs++;
-                                        }
-                                    else
-                                        {
-                                            free_file_hash(cb->file_hash);
-                                        }
-                                }
+                            add_file_hash_to_list(cb, hashset, compte, opts);
                         }
                 }
         }

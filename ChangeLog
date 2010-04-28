@@ -1,7 +1,10 @@
+28.04.2010
+       - Olivier Delhomme <olivier.delhomme@free.fr>
+        * Code simplification
+
 27.04.2010
     - Olivier Delhomme <olivier.delhomme@free.fr>
         * Now hashes files by pieces of 512 bytes (sector size)
-
 
 21.04.2010
     - Olivier Delhomme <olivier.delhomme@free.fr>
