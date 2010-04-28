@@ -837,12 +837,16 @@ static result_hash_t *copie_les_resultats(file_hash_t *file_hash, file_hash_t *r
 {
     result_hash_t *all_known_hash = NULL;
 
+
     all_known_hash = (result_hash_t *) g_malloc0(sizeof(result_hash_t));
 
     all_known_hash->hashset_name = g_strdup(result_hash->hashset->name);
     all_known_hash->hashset_file_filename = g_strdup(result_hash->filename);
 
     all_known_hash->filename = g_strdup(file_hash->filename);
+
+    all_known_hash->file_hashs  = (chunk_t *) g_malloc0(sizeof(chunk_t));
+
     all_known_hash->file_hashs->hash_md5 = my_g_strdup(file_hash->file_hashs->hash_md5, file_hash->file_hashs->len_md5);
     all_known_hash->file_hashs->len_md5 = file_hash->file_hashs->len_md5;
     all_known_hash->file_hashs->hash_sha1 = my_g_strdup(file_hash->file_hashs->hash_sha1, file_hash->file_hashs->len_sha1);

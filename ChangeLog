@@ -4,6 +4,7 @@
         * using g_ascii_strcasecmp function (to be able to use this code with
           gtk version <= 2.10)
         * Now all files are UTF-8 Encoded
+        * All chunks should now be added to the tree structure.
 
 27.04.2010
     - Olivier Delhomme <olivier.delhomme@free.fr>
@@ -18,7 +19,6 @@
         * configure.ac now checks for libbz2 (the devel part is mandatory to
           compile)
         * corrected a double declaration of the same function !
-
 
 13.05.2008  Olivier Delhomme <olivierdelhomme@gmail.com>
         * Modified all calls to functions to libduptools
