@@ -1,4 +1,4 @@
-SUBDIRS = 
+SUBDIRS =
 
 DEFS = 	-DPLUGINS_DIR=\"$(plugins_dir)\" 	\
 	-DDATA_DIR=\"$(datadir)\" 		\
@@ -11,10 +11,17 @@ DEFS = 	-DPLUGINS_DIR=\"$(plugins_dir)\" 	\
 
 AM_CPPFLAGS = -DPROGRAM_LOCALE_DIR=\"${PROGRAM_LOCALE_DIR}\"
 
-bin_PROGRAMS = gtkcmphash
-gtkcmphash_LDFLAGS = -export-dynamic -no-undefined 
+bin_PROGRAMS = gtkcmphash genhashs
+gtkcmphash_LDFLAGS = -export-dynamic -no-undefined
 gtkcmphash_LDADD = $(GLIB2_LIBS) $(GTK2_LIBS) $(LIBGLADE_LIBS)      \
 	       	   $(LIBDUPTOOLS_LIBS) $(LIBSSL_LIBS) $(GTHREADS2_LIBS) $(BZ2_LIBS)
+
+genhashs_LDFLAGS = -export-dynamic -no-undefined
+genhashs_LDADD = $(GLIB2_LIBS) $(BZ2_LIBS)
+
+genhashs_SOURCES =		\
+	genhashs.c
+	include/genhashs.h
 
 gtkcmphash_SOURCES = 			\
 	gtkcmphash.c			\
@@ -28,7 +35,7 @@ gtkcmphash_SOURCES = 			\
 	include/log_window.h		\
 	include/file_io.h		\
 	include/progress_window.h	\
-	include/pref_window.h		
+	include/pref_window.h
 
 gladefiles = gtkcmphash.glade
 gladedir = $(datadir)/@PACKAGE@
