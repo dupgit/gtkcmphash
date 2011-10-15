@@ -7,7 +7,8 @@ DEFS = 	-DPLUGINS_DIR=\"$(plugins_dir)\" 	\
 	-I$(SRC_DIR)/include			\
 	$(GTK2_CFLAGS) $(GLIB2_CFLAGS) $(CFLAGS)\
 	$(LIBGLADE_CFLAGS) $(LIBDUPTOOLS_CFLAGS)    \
-	$(LIBSSL_CFLAGS) $(GTHREADS2_CFLAGS)
+	$(LIBSSL_CFLAGS) $(GTHREADS2_CFLAGS) $(LIBGCRYPT_CFLAGS)
+
 
 AM_CPPFLAGS = -DPROGRAM_LOCALE_DIR=\"${PROGRAM_LOCALE_DIR}\"
 
@@ -17,7 +18,8 @@ gtkcmphash_LDADD = $(GLIB2_LIBS) $(GTK2_LIBS) $(LIBGLADE_LIBS)      \
 	       	   $(LIBDUPTOOLS_LIBS) $(LIBSSL_LIBS) $(GTHREADS2_LIBS) $(BZ2_LIBS)
 
 genhashs_LDFLAGS = -export-dynamic -no-undefined
-genhashs_LDADD = $(GLIB2_LIBS) $(BZ2_LIBS)
+
+genhashs_LDADD = $(GLIB2_LIBS) $(BZ2_LIBS) $(LIBGCRYPT_LIBS)
 
 genhashs_SOURCES =		\
 	genhashs.c

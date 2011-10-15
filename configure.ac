@@ -28,6 +28,8 @@ AC_SUBST(LIBGLADE_VERSION)
 AC_SUBST(LIBDUPTOOLS_VERSION)
 AC_SUBST(LIBSSL_VERSION)
 
+AM_PATH_LIBGCRYPT()
+
 AM_MAINTAINER_MODE
 
 dnl Put the preprocessor macros in a header instead of command line
