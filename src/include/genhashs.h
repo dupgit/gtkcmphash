@@ -25,3 +25,14 @@
 #include <gcrypt.h>
 #include <glib.h>
 
+
+typedef struct
+{
+    gcry_md_hd_t md5;        /* Message is 16 bytes long */
+    gcry_md_hd_t sha1;       /* Message is 20 bytes long */
+    gcry_md_hd_t rmd160;     /* Message is 20 bytes long */
+    gcry_md_hd_t tiger;      /* Message is 24 bytes long */
+    gcry_md_hd_t sha384;     /* Message is 48 bytes long */
+    gcry_md_hd_t whirlpool;  /* Message is 64 bytes long */
+                              /* Total is  192 bytes long */
+} hash_context_t;

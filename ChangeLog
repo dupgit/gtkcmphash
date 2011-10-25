@@ -3,7 +3,7 @@
         * FSF address
         * added genhashs.c and genhashs.h that will be a command line only
           program to generate hashs from files and that may save the results in
-          plain text files or in an squlite database (an existing one or not).
+          plain text files or in an sqlite database (an existing one or not).
         * Added libgcrypt
 
 28.04.2010
